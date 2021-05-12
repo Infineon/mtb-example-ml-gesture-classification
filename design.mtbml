@@ -1,0 +1,38 @@
+{
+    "filetype": "modustoolbox-ml-configurator",
+    "model": {
+        "framework": "KERAS",
+        "optimization": "SIZE",
+        "path": "pretrained_models/Magic_wand_model.h5",
+        "quantization": {
+            "float32": true,
+            "int16": true,
+            "int16x16": true,
+            "int16x8": true,
+            "int8": true,
+            "int8x8": true
+        }
+    },
+    "name": "magic_wand",
+    "output_dir": "mtb_ml_gen",
+    "target": "CY8C62xA",
+    "validation": {
+        "feat_col_first": 0,
+        "feat_col_last": 0,
+        "inputFormat": "CSV",
+        "inputType": "PRNG",
+        "max_samples": 100,
+        "path": "",
+        "quantization": {
+            "float32": true,
+            "int16": true,
+            "int16x16": true,
+            "int16x8": true,
+            "int8": true,
+            "int8x8": true
+        },
+        "target_cols": "0"
+    },
+    "version": 1
+}
+
