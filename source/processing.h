@@ -74,5 +74,7 @@ int iir_filter_init(iir_filter_struct* st, const float* b, const float* a, int n
 void iir_filter(iir_filter_struct *st, float *buf, int length, uint16_t cur_dimension, uint16_t total_dimensions);
 void normalization_min_max(float *buf, uint16_t length, uint16_t dimension,float sensor_min, float sensor_max);
 void cast_int16_to_float(int16_t *int_buf, float *float_buf, uint16_t length);
+void column_swap(float *buf, uint16_t length, uint16_t dimension, uint16_t column_one, uint16_t column_two);
+void column_inverse(float *buf, uint16_t length, uint16_t dimension, uint16_t column);
 
 #endif /* PROCESSING_H */

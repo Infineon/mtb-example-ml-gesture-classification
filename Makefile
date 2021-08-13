@@ -73,10 +73,16 @@ VERBOSE=
 NN_TYPE=float
 
 # Model Name to be loaded to the firmware
-NN_MODEL_NAME="test_model"
+NN_MODEL_NAME="magic_wand"
 
 # Folder name containing the model and regression data
 NN_MODEL_FOLDER=./mtb_ml_gen
+
+# Shield used to gather IMU data
+#
+# CY_028_TFT_SHIELD    -- Using the 028-TFT shield
+# CY_028_SENSE_SHIELD  -- Using the 028-SENSE shield
+SHIELD_DATA_COLLECTION=CY_028_TFT_SHIELD
 
 ################################################################################
 # Advanced Configuration
@@ -128,6 +134,14 @@ DEFINES+=CY_ML_FIXED_POINT_8_IN=1 CY_ML_FIXED_POINT_8_NN=1
 COMPONENTS+=ML_INT8x8
 endif
 
+# Depending which shield is used for data collection, add specific DEFINE
+ifeq (CY_028_TFT_SHIELD, $(SHIELD_DATA_COLLECTION))
+DEFINES+=CY_BMI_160_IMU=1
+endif
+ifeq (CY_028_SENSE_SHIELD, $(SHIELD_DATA_COLLECTION))
+DEFINES+=CY_BMX_160_IMU=1
+endif
+
 # Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT=hardfp
 
@@ -158,12 +172,16 @@ LDLIBS=
 # Path to the linker script to use (if empty, use the default linker script).
 LINKER_SCRIPT=
 
-# Custom pre-build commands to run.
-PREBUILD=
-
 # Custom post-build commands to run.
-POSTBUILD=
-
+PREBUILD=
+PREBUILD+=rm -rf bmi160;
+PREBUILD+=mkdir bmi160/;
+PREBUILD+=cp $(SEARCH_BMI160_driver)/bmi160* bmi160/;
+PREBUILD+=cp $(SEARCH_BMI160_driver)/LICENSE bmi160/;
+ifeq (CY_028_SENSE_SHIELD, $(SHIELD_DATA_COLLECTION))
+PREBUILD+=sed -i 's/UINT8_C(0xD1)/UINT8_C(0xD8)/' bmi160/bmi160_defs.h;
+endif
+CY_IGNORE+=$(SEARCH_BMI160_driver)
 
 ################################################################################
 # Paths

@@ -196,7 +196,6 @@ void normalization_min_max(float *buf, uint16_t length, uint16_t dimension, floa
 *   float_buf: A buffer to store the casted float values
 *   length: The number of rows in the passed in buffer
 *
-*
 *******************************************************************************/
 void cast_int16_to_float(int16_t *int_buf, float *float_buf, uint16_t length)
 {
@@ -209,3 +208,60 @@ void cast_int16_to_float(int16_t *int_buf, float *float_buf, uint16_t length)
         cur++;
     }
 }
+
+/*******************************************************************************
+* Function Name: column_swap
+********************************************************************************
+* Summary:
+*   Swaps two columns in an array.
+*
+* Parameters:
+*   buf: A buffer with data to swap
+*   length: The number of rows in the passed in buffer
+*   dimension: The number of columns in the passed in buffer
+*   column_one: The column that will be swapped with column_two
+*   column_two: The column that will be swapped with column_one
+*
+*******************************************************************************/
+void column_swap(float *buf, uint16_t length, uint16_t dimension, uint16_t column_one, uint16_t column_two)
+{
+    uint16_t cur_row = 0;
+    float temp = 0;
+
+    /* Completes calculations for each row */
+    while(length > cur_row)
+    {
+        /* Swap the specified columns */
+        temp = buf[cur_row*dimension+column_one];
+        buf[cur_row*dimension+column_one] = buf[cur_row*dimension+column_two];
+        buf[cur_row*dimension+column_two] = temp;
+        cur_row++;
+    }
+}
+
+/*******************************************************************************
+* Function Name: column_inverse
+********************************************************************************
+* Summary:
+*   Inverts of each element of a given column in an array.
+*
+* Parameters:
+*   buf: A buffer with data invert
+*   length: The number of rows in the passed in buffer
+*   dimension: The number of columns in the passed in buffer
+*   column: The column that will be inverted
+*
+*******************************************************************************/
+void column_inverse(float *buf, uint16_t length, uint16_t dimension, uint16_t column)
+{
+    uint16_t cur_row = 0;
+
+    /* Completes calculations for each row */
+    while(length > cur_row)
+    {
+        /* Swap the specified columns */
+        buf[cur_row*dimension+column] = buf[cur_row*dimension+column] * -1;
+        cur_row++;
+    }
+}
+

@@ -48,7 +48,7 @@
 #include "cybsp.h"
 
 #include "mtb_bmx160.h"
-#include "bmm150.h"
+#include "mtb_bmi160.h"
 
 #include "cy_fifo.h"
 
@@ -74,7 +74,14 @@ typedef struct
 *******************************************************************************/
 #define SENSOR_EVENT_BIT 1u<<2
 
+#ifdef CY_BMX_160_IMU
 #define IMU_SPI_FREQUENCY 10000000
+#endif
+
+#ifdef CY_BMI_160_IMU
+    #define IMU_I2C_MASTER_DEFAULT_ADDRESS    0
+    #define IMU_I2C_FREQUENCY                1000000
+#endif
 
 #define SENSOR_DATA_WIDTH 2
 #define SENSOR_NUM_AXIS   6
@@ -121,17 +128,27 @@ cyhal_timer_t sensor_timer;
 cy_event_t sensor_event;
 uint32_t sensor_event_bits  = SENSOR_EVENT_BIT;
 
-
 /* Circle buffer to store IMU data */
 static cy_fifo_t sensor_fifo;
 int8_t sensor_fifo_pool[SENSOR_FIFO_POOL_SIZE];
 
-/* IMU driver structures */
+#ifdef CY_BMX_160_IMU
+/* BMX160 driver structures */
 mtb_bmx160_data_t data;
 mtb_bmx160_t sensor_bmx160;
 
 /* SPI object for data transmission */
 cyhal_spi_t spi;
+#endif
+
+#ifdef CY_BMI_160_IMU
+/* BMI160 driver structures */
+mtb_bmi160_data_t data;
+mtb_bmi160_t sensor_bmi160;
+
+/* I2C object for data transmission */
+cyhal_i2c_t i2c;
+#endif
 
 /* Neural Network Object */
 nn_obj_t nn_gesture_obj;
@@ -150,7 +167,7 @@ cy_rslt_t sensor_timer_init(void);
 *   IMU to collect data, a SPI for IMU communication, a timer, and circular buffer.
 *
 * Parameters:
-* None
+*     None
 *
 * Return:
 *   The status of the initialization.
@@ -169,6 +186,7 @@ cy_rslt_t sensor_init(void)
     /* Setup the circle buffer for data storage */
     cy_fifo_init_static(&sensor_fifo, sensor_fifo_pool, sizeof(sensor_fifo_pool), SENSOR_FIFO_ITEM_SIZE);
 
+#ifdef CY_BMX_160_IMU
     /* Initialize SPI for IMU communication */
     result = cyhal_spi_init(&spi, CYBSP_SPI_MOSI, CYBSP_SPI_MISO, CYBSP_SPI_CLK, NC, NULL, 8, CYHAL_SPI_MODE_00_MSB, false);
     if(CY_RSLT_SUCCESS != result)
@@ -183,12 +201,78 @@ cy_rslt_t sensor_init(void)
         return result;
     }
 
+    /* Initialize the chip select line */
+    result = cyhal_gpio_init(CYBSP_SPI_CS, CYHAL_GPIO_DIR_OUTPUT, CYHAL_GPIO_DRIVE_STRONG, 1);
+    if(CY_RSLT_SUCCESS != result)
+    {
+        return result;
+    }
+
     /* Initialize the IMU */
     result = mtb_bmx160_init_spi(&sensor_bmx160, &spi, CYBSP_SPI_CS);
     if(CY_RSLT_SUCCESS != result)
     {
         return result;
     }
+
+    /* Set the output data rate and range of the accelerometer */
+    sensor_bmx160.sensor1.accel_cfg.odr = BMI160_ACCEL_ODR_200HZ;
+    sensor_bmx160.sensor1.accel_cfg.range = BMI160_ACCEL_RANGE_4G;
+
+    /* Set the output data rate of the gyroscope */
+    sensor_bmx160.sensor1.gyro_cfg.odr = BMI160_GYRO_ODR_200HZ;
+
+    /* Set the sensor configuration */
+    bmi160_set_sens_conf(&(sensor_bmx160.sensor1));
+#endif
+
+#ifdef CY_BMI_160_IMU
+    /* Configure the I2C mode, the address, and the data rate */
+    cyhal_i2c_cfg_t i2c_config =
+    {
+            CYHAL_I2C_MODE_MASTER,
+            IMU_I2C_MASTER_DEFAULT_ADDRESS,
+            IMU_I2C_FREQUENCY
+    };
+
+    /* Initialize I2C for IMU communication */
+    result = cyhal_i2c_init(&i2c, CYBSP_I2C_SDA, CYBSP_I2C_SCL, NULL);
+    if(CY_RSLT_SUCCESS != result)
+    {
+        return result;
+    }
+
+    /* Configure the I2C */
+    result = cyhal_i2c_configure(&i2c, &i2c_config);
+    if(CY_RSLT_SUCCESS != result)
+    {
+        return result;
+    }
+
+    /* Initialize the IMU */
+    result = mtb_bmi160_init_i2c(&sensor_bmi160, &i2c, MTB_BMI160_DEFAULT_ADDRESS);
+    if(CY_RSLT_SUCCESS != result)
+    {
+        return result;
+    }
+
+    /* Set the default configuration for the BMI160 */
+    result = mtb_bmi160_config_default(&sensor_bmi160);
+    if(CY_RSLT_SUCCESS != result)
+    {
+        return result;
+    }
+
+    /* Set the output data rate and range of the accelerometer */
+    sensor_bmi160.sensor.accel_cfg.odr = BMI160_ACCEL_ODR_200HZ;
+    sensor_bmi160.sensor.accel_cfg.range = BMI160_ACCEL_RANGE_4G;
+
+    /* Set the output data rate of the gyroscope */
+    sensor_bmi160.sensor.gyro_cfg.odr = BMI160_GYRO_ODR_200HZ;
+
+    /* Set the sensor configuration */
+    bmi160_set_sens_conf(&(sensor_bmi160.sensor));
+#endif
 
     /* Timer for data collection */
     sensor_timer_init();
@@ -250,10 +334,17 @@ void sensor_task(void *arg)
             cur++;
         }
 
-        /* Do a min max normalization to get all data between -1 and 1 */
+        /* A min max normalization to get all data between -1 and 1 */
         normalization_min_max(&data_feed[0][0], SENSOR_BATCH_SIZE, SENSOR_NUM_AXIS, MIN_DATA_SAMPLE, MAX_DATA_SAMPLE);
 
-        /*  */
+#ifdef CY_BMI_160_IMU
+        /* Swap axis for BMI_160 so board orientation stays the same */
+        column_inverse(&data_feed[0][0], SENSOR_BATCH_SIZE, SENSOR_NUM_AXIS, 2);
+        column_swap(&data_feed[0][0], SENSOR_BATCH_SIZE, SENSOR_NUM_AXIS, 0, 1);
+        column_inverse(&data_feed[0][0], SENSOR_BATCH_SIZE, SENSOR_NUM_AXIS, 5);
+        column_swap(&data_feed[0][0], SENSOR_BATCH_SIZE, SENSOR_NUM_AXIS, 3, 4);
+#endif
+
 #if CY_ML_FIXED_POINT_16_IN
         /* Convert to int16 based on the q format */
         float format = QFORMAT_SCALE;
@@ -275,8 +366,6 @@ void sensor_task(void *arg)
         input_reference = (NN_IN_Type *) data_feed;
         nn_feed(&nn_gesture_obj, input_reference);
 #endif
-
-
     }
 }
 
@@ -301,7 +390,12 @@ void sensor_interrupt_handler(void *callback_arg, cyhal_timer_event_t event)
 
     /* Read data from IMU sensor */
     cy_rslt_t result;
+#ifdef CY_BMX_160_IMU
     result = mtb_bmx160_read(&sensor_bmx160, &data);
+#endif
+#ifdef CY_BMI_160_IMU
+    result = mtb_bmi160_read(&sensor_bmi160, &data);
+#endif
     if (CY_RSLT_SUCCESS != result)
     {
         CY_ASSERT(0);

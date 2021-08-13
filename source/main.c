@@ -130,7 +130,14 @@ int main(void)
 void vApplicationDaemonTaskStartupHook(void)
 {
     /* Initializes the inference engine */
-    sensor_init();
+    cy_rslt_t result;
+
+    result = sensor_init();
+    if(CY_RSLT_SUCCESS != result)
+    {
+        /* Reset the system on sensor fail */
+        NVIC_SystemReset();
+    }
 }
 
 

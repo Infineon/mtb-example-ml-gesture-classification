@@ -51,7 +51,7 @@
 /*******************************************************************************
 * Constants
 *******************************************************************************/
-#define MIN_CONFIDENCE 0.7
+#define MIN_CONFIDENCE 0.97
 
 /*******************************************************************************
 * Function Name: control_task
@@ -79,7 +79,6 @@ void control_task( void * arg )
 #else
     float *nn_float_buffer;
 #endif
-
 
     for(;;)
     {
@@ -112,7 +111,7 @@ void control_task( void * arg )
         printf("|-------------|--------|--------|--------------|--------| |-------------|\r\n");
 
         /* Prints the confidence level of each class */
-        printf("| Probability |  %%%-3d      %%%-3d       %%%-3d        %%%-3d       ", (int)(nn_float_buffer[0]*100), (int)(nn_float_buffer[1]*100), (int)(nn_float_buffer[2]*100), (int)(nn_float_buffer[3]*100));
+        printf("| Confidence  |  %%%-3d      %%%-3d       %%%-3d        %%%-3d       ", (int)(nn_float_buffer[0]*100), (int)(nn_float_buffer[1]*100), (int)(nn_float_buffer[2]*100), (int)(nn_float_buffer[3]*100));
 
         /* Check the confidence for the selected class */
         if(MIN_CONFIDENCE < nn_float_buffer[class_index])

@@ -7,22 +7,23 @@
         "quantization": {
             "float32": true,
             "int16": true,
-            "int16x16": true,
-            "int16x8": true,
+            "int16x16": false,
+            "int16x8": false,
             "int8": true,
-            "int8x8": true
+            "int8x8": false
         }
     },
     "name": "magic_wand",
     "output_dir": "mtb_ml_gen",
     "target": "CY8C62xA",
     "validation": {
-        "feat_col_first": 0,
+        "feat_col_count": 127,
+        "feat_col_first": 1,
         "feat_col_last": 0,
         "inputFormat": "CSV",
         "inputType": "PRNG",
         "max_samples": 100,
-        "path": "",
+        "path": "../../output_O_nrsh3.csv",
         "quantization": {
             "float32": true,
             "int16": true,
@@ -31,6 +32,8 @@
             "int8": true,
             "int8x8": true
         },
+        "target_col_count": 5,
+        "target_col_first": 0,
         "target_cols": "0"
     },
     "version": 1

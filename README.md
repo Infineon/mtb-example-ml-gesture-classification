@@ -2,45 +2,54 @@
 
 This code example demonstrates how to perform gesture classification based on motion sensor (accelerometer and gyroscope) data. The code example comes with a pre-trained model that classifies the following gestures: circle, square, and side-to-side.
 
-For more details, see the [ModusToolbox Machine Learning solution](https://www.cypress.com/products/modustoolbox/machine-learning).
+For more details, see the [ModusToolbox&trade; Machine Learning solution](https://www.cypress.com/products/modustoolbox/machine-learning).
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzMxMTIiLCJTcGVjIE51bWJlciI6IjAwMi0zMzExMiIsIkRvYyBUaXRsZSI6Ik1hY2hpbmUgTGVhcm5pbmc6IGdlc3R1cmUgY2xhc3NpZmljYXRpb24iLCJyaWQiOiJucnNoIiwiRG9jIHZlcnNpb24iOiIxLjAuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[View this README on GitHub.](https://github.com/Infineon/mtb-example-ml-gesture-classification)
+
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzMxMTIiLCJTcGVjIE51bWJlciI6IjAwMi0zMzExMiIsIkRvYyBUaXRsZSI6Ik1hY2hpbmUgTGVhcm5pbmc6IGdlc3R1cmUgY2xhc3NpZmljYXRpb24iLCJyaWQiOiJucnNoIiwiRG9jIHZlcnNpb24iOiIxLjEuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+
+**Disclaimer:** The model provided is an example and may need customization for generalization or to meet certain performance criteria. If you require large-scale production, contact your sales representative.
+
 
 ## Requirements
 
-- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3 with ModusToolbox tools patch 2.3.1
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3 with ModusToolbox&trade; tools patch 2.3.1
 - Board support package (BSP) minimum required version: 2.0.0
 - Programming language: C
 - Associated parts: All [PSoC&trade; 6 MCU](http://www.cypress.com/PSoC6) parts
 
+
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
 - GNU Arm® embedded compiler v9.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
-- Arm compiler v6.13 (`ARM`)
+- Arm&reg; compiler v6.13 (`ARM`)
 - IAR C/C++ compiler v8.42.2 (`IAR`)
 
 ## Supported kits (make variable 'TARGET')
 
-- [PSoC 62S2 Wi-Fi Bluetooth&reg; pioneer kit](https://www.cypress.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`) - Default value of `TARGET`
-- [PSoC 64 "Secure Boot" Wi-Fi Bluetooth pioneer kit](http://www.cypress.com/CY8CKIT-064B0S2-4343W) (`CY8CKIT-064B0S2-4343W`)
+- [PSoC&trade; 62S2 Wi-Fi Bluetooth&reg; pioneer kit](https://www.cypress.com/CY8CKIT-062S2-43012) (`CY8CKIT-062S2-43012`) - Default value of `TARGET`
+- [PSoC&trade; 64 "Secure Boot" Wi-Fi Bluetooth&reg; pioneer kit](http://www.cypress.com/CY8CKIT-064B0S2-4343W) (`CY8CKIT-064B0S2-4343W`)
+
 
 ## Hardware setup
 
-Connect the CY8CKIT-028-SENSE shield to the Arduino header of your baseboard.
+Connect the CY8CKIT-028-TFT shield to the header of your baseboard, which is compatible with Arduino.
+
+The code example also works with the CY8CKIT-028-SENSE shield. See the [Operation](#operation) section for more information.
 
 ## Software setup
 
 Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en).
 
-By default, the Makefile uses a model that comes with the code example. The pre-trained Neural Net (NN) model is located in the *pretrained_models* folder. The output files location is set to *mtb_ml_gen*; the project name is set to *magic_wand*. You can use the MTB-ML Configurator Tool to open the *design.mtbml* model to evaluate the model.
+By default, the Makefile uses a model that comes with the code example. The pre-trained neural net (NN) model is located in the *pretrained_models* folder. The output files location is set to *mtb_ml_gen*; the project name is set to *magic_wand*. You can use the MTB-ML Configurator Tool to open the *design.mtbml* model to evaluate the model.
 
 ## Using the code example
 
 Create the project and open it using one of the following:
 
-<details><summary><b>In Eclipse IDE for ModusToolbox</b></summary>
+<details><summary><b>In Eclipse IDE for ModusToolbox&trade; software</b></summary>
 
-1. Click the **New Application** link in the **Quick Panel** (or, use **File** > **New** > **ModusToolbox Application**). This launches the [Project Creator](http://www.cypress.com/ModusToolboxProjectCreator) tool.
+1. Click the **New Application** link in the **Quick Panel** (or, use **File** > **New** > **ModusToolbox Application**). This launches the [Project Creator](https://www.cypress.com/ModusToolboxProjectCreator) tool.
 
 2. Pick a kit supported by the code example from the list shown in the **Project Creator - Choose Board Support Package (BSP)** dialog.
 
@@ -52,57 +61,77 @@ Create the project and open it using one of the following:
 
 3. In the **Project Creator - Select Application** dialog, choose the example by enabling the checkbox.
 
-4. Optionally, change the suggested **New Application Name**.
+4. (Optional) Change the suggested **New Application Name**.
 
-5. Enter the local path in the **Application(s) Root Path** field to indicate where the application needs to be created.
-
-   Applications that can share libraries can be placed in the same root path.
+5. The **Application(s) Root Path** defaults to the Eclipse workspace which is usually the desired location for the application. If you want to store the application in a different location, you can change the *Application(s) Root Path* value. Applications that share libraries should be in the same root path.
 
 6. Click **Create** to complete the application creation process.
 
-For more details, see the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*).
+For more details, see the [Eclipse IDE for ModusToolbox&trade; software user guide](https://www.cypress.com/MTBEclipseIDEUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/ide_{version}/docs/mt_ide_user_guide.pdf*).
 
 </details>
 
 <details><summary><b>In command-line interface (CLI)</b></summary>
 
-ModusToolbox provides the Project Creator as both a GUI tool and a command line tool to easily create one or more ModusToolbox applications. See the "Project Creator Tools" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) for more details.
+ModusToolbox&trade; software provides the Project Creator as both a GUI tool and the command line tool, "project-creator-cli". The CLI tool can be used to create applications from a CLI terminal or from within batch files or shell scripts. This tool is available in the *{ModusToolbox&trade; software install directory}/tools_{version}/project-creator/* directory.
 
-Alternatively, you can manually create the application using the following steps:
+Use a CLI terminal to invoke the "project-creator-cli" tool. On Windows, use the command line "modus-shell" program provided in the ModusToolbox&trade; software installation instead of a standard Windows command-line application. This shell provides access to all ModusToolbox&trade; software tools. You can access it by typing `modus-shell` in the search box in the Windows menu. In Linux and macOS, you can use any terminal application.
 
-1. Download and unzip this repository onto your local machine, or clone the repository.
+This tool has the following arguments:
 
-2. Open a CLI terminal and navigate to the application folder.
+Argument | Description | Required/optional
+---------|-------------|-----------
+`--board-id` | Defined in the `<id>` field of the [BSP](https://github.com/Infineon?q=bsp-manifest&type=&language=&sort=) manifest | Required
+`--app-id`   | Defined in the `<id>` field of the [CE](https://github.com/Infineon?q=ce-manifest&type=&language=&sort=) manifest | Required
+`--target-dir`| Specify the directory in which the application is to be created if you prefer not to use the default current working directory | Optional
+`--user-app-name`| Specify the name of the application if you prefer to have a name other than the example's default name | Optional
 
-   On Windows, use the command line "modus-shell" program provided in the ModusToolbox installation instead of a standard Windows command line application. This shell provides access to all ModusToolbox tools. You can access it by typing `modus-shell` in the search box in the Windows menu.
+<br>
 
-   In Linux and macOS, you can use any terminal application.
+The following example will clone the "[Hello World](https://github.com/Infineon/mtb-example-psoc6-hello-world)" application with the desired name "MyHelloWorld" configured for the *CY8CKIT-062-WIFI-BT* BSP into the specified working directory, *C:/mtb_projects*:
 
-   **Note:** The cloned application contains a default BSP file (*TARGET_xxx.mtb*) in the *deps* folder. Use the [Library Manager](https://www.cypress.com/ModusToolboxLibraryManager) (`make modlibs` command) to select and download a different BSP file, if required. If the selected kit does not have the required resources or is not [supported](#supported-kits-make-variable-target), the application may not work.
+   ```
+   project-creator-cli --board-id CY8CKIT-062-WIFI-BT --app-id mtb-example-psoc6-hello-world --user-app-name MyHelloWorld --target-dir "C:/mtb_projects"
+   ```
 
-3. Import the required libraries by executing the `make getlibs` command.
+**Note:** The project-creator-cli tool uses the `git clone` and `make getlibs` commands to fetch the repository and import the required libraries. For details, see the "Project creator tools" section of the [ModusToolbox&trade; software user guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
 
-Various CLI tools include a `-h` option that prints help information to the terminal screen about that tool. For more details, see the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*).
+</details>
+
+<details><summary><b>In third-party IDEs</b></summary>
+
+Use one of the following options:
+
+- **Use the standalone [Project Creator](https://www.cypress.com/ModusToolboxProjectCreator) tool:**
+
+   1. Launch Project Creator from the Windows Start menu or from *{ModusToolbox&trade; software install directory}/tools_{version}/project-creator/project-creator.exe*.
+
+   2. In the initial **Choose Board Support Package** screen, select the BSP, and click **Next**.
+
+   3. In the **Select Application** screen, select the appropriate IDE from the **Target IDE** drop-down menu.
+
+   4. Click **Create** and follow the instructions printed in the bottom pane to import or open the exported project in the respective IDE.
+
+<br>
+
+- **Use command-line interface (CLI):**
+
+   1. Follow the instructions from the **In command-line interface (CLI)** section to create the application, and then import the libraries using the `make getlibs` command.
+
+   2. Export the application to a supported IDE using the `make <ide>` command.
+
+   3. Follow the instructions displayed in the terminal to create or import the application as an IDE project.
+
+For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox&trade; software user guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox&trade; software install directory}/docs_{version}/mtb_user_guide.pdf*).
 
 </details>
 
-<details><summary><b>In Third-party IDEs</b></summary>
-
-1. Follow the instructions from the **In command-line interface (CLI)** section to create the application, and import the libraries using the `make getlibs` command.
-
-2. Export the application to a supported IDE using the `make <ide>` command.
-
-   For a list of supported IDEs and more details, see the "Exporting to IDEs" section of the [ModusToolbox User Guide](https://www.cypress.com/ModusToolboxUserGuide) (locally available at *{ModusToolbox install directory}/docs_{version}/mtb_user_guide.pdf*.
-
-3. Follow the instructions displayed in the terminal to create or import the application as an IDE project.
-
-</details>
 
 ## Operation
 
-If using a PSoC 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.cypress.com/documentation/software-and-drivers/psoc-64-secure-mcu-secure-boot-sdk-user-guide) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
+If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC&trade; 64 device must be provisioned with keys and policies before being programmed. Follow the instructions in the ["Secure Boot" SDK user guide](https://www.cypress.com/documentation/software-and-drivers/psoc-64-secure-mcu-secure-boot-sdk-user-guide) to provision the device. If the kit is already provisioned, copy-paste the keys and policy folder to the application folder.
 
-1. Connect the CY8CKIT-028-SENSE shield to the baseboard kit.
+1. Connect the CY8CKIT-028-TFT shield to the baseboard. If using the CY8CKIT-028-SENSE shield, change `SHIELD_DATA_COLLECTION=CY_028_TFT_SHIELD` to `SHIELD_DATA_COLLECTION=CY_028_SENSE_SHIELD` in the Makefile.
 
 2. Connect the board to your PC using the provided USB cable through the KitProg3 USB connector.
 
@@ -110,16 +139,17 @@ If using a PSoC 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC 64 de
 
 4. Program the board using one of the following:
 
-   <details><summary><b>Using Eclipse IDE for ModusToolbox</b></summary>
+   <details><summary><b>Using Eclipse IDE for ModusToolbox&trade; software</b></summary>
 
       1. Select the application project in the Project Explorer.
 
       2. In the **Quick Panel**, scroll down, and click **\<Application Name> Program (KitProg3_MiniProg4)**.
+
    </details>
 
    <details><summary><b>Using CLI</b></summary>
 
-     From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. You can specify a target and toolchain manually:
+     From the terminal, execute the `make program` command to build and program the application using the default toolchain to the default target. The default toolchain and target are specified in the application's Makefile but you can override those values manually:
       ```
       make program TARGET=<BSP> TOOLCHAIN=<toolchain>
       ```
@@ -128,7 +158,13 @@ If using a PSoC 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC 64 de
       ```
       make program TARGET=CY8CPROTO-062-4343W TOOLCHAIN=GCC_ARM
       ```
-      </details>
+      If using the CY8CKIT-028-SENSE shield:
+
+      ```
+      make program TARGET=<BSP> TOOLCHAIN=<toolchain> -j8 SHIELD_DATA_COLLECTION=CY_028_TFT_SHIELD
+      ```
+
+   </details>
 
 5. After programming, the application starts automatically. Confirm that "Gesture Classification Example" and some log data are printed on the UART terminal, the gesture classifications and confidence are updated continuously.
 
@@ -138,41 +174,64 @@ If using a PSoC 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSoC 64 de
 
    ![](images/board-orientation.jpg)
 
-7. Perform a counter-clockwise circle movement continuously and confirm that the UART terminal prints the gesture as **Circle** and the confidence of the circle increases past 70%.
+7. Perform a counter-clockwise circle movement continuously. Confirm that the UART terminal prints the gesture as [**Circle**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/circle.gif), and the confidence of the circle increases past 97%. For best results, repeatedly perform a circle movement that has a diameter of one foot, and complete one circle per second.
 
-8. Perform a counter-clockwise square movement continuously and confirm that the UART terminal prints the gesture as **Square** and the confidence of the square increases past 70%.
+   **Figure 2. Circle gesture**
 
-9. Perform a side-to-side movement (left <-> right) continuously and confirm that the UART terminal prints the gesture as **Side-to-side** and the confidence side-to-side increases past 70%.
+   <img src="images/circle.gif" style="zoom: 25%;" />
 
-10. When not performing any of the gestures above, confirm that the UART terminal prints the gesture as **None**.
 
-    **Note**: If the confidence is lower than 70% then the gesture will register as **None**.
+
+8. Perform a counter-clockwise square movement continuously. Confirm that the UART terminal prints the gesture as [**Square**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/square.gif), and the confidence of the square increases past 97%. For best results, repeatedly perform a square movement that has a side length of one foot, and complete one square in two seconds.
+
+   **Figure 3. Square gesture**
+
+   <img src="images/square.gif" style="zoom:25%;" />
+
+
+
+9. Perform a side-to-side movement (left <-> right) continuously, confirm that the UART terminal prints the gesture as [**Side-to-side**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/side-to-side.gif), and the confidence increases past 97%. For best results, repeatedly perform a one-foot-wide left-to-right movement in half-a-second.
+
+   **Figure 4. Side-to-side gesture**
+
+   <img src="images/side-to-side.gif" style="zoom:25%;" />
+
+
+10. When not performing any of these gestures, confirm that the UART terminal prints the gesture as **None**.
+
+**Note:** If the confidence is lower than 97%, the gesture will register as **None**.
+
+**Note:** Figures 2-4 above may have low frame rates. Click on the link to redirect to GitHub for better quality.
+
 
 ## Debugging
 
-You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For more details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox User Guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
+You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For more details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox&trade; user guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
 
 **Note:** **(Only while debugging)** On the CM4 CPU, some code in `main()` may execute before the debugger halts at the beginning of `main()`. This means that some code executes twice - once before the debugger stops execution, and again after the debugger resets the program counter to the beginning of `main()`. See [KBA231071](https://community.cypress.com/docs/DOC-21143) to learn about this and for the workaround.
 
+
 ## Design and implementation
 
-In this example, the firmware reads the data from a motion sensor (BMX160) to detect gestures. The data consists of 3-axis orientation data from the accelerometer and 3-axis orientation data from the gyroscope. A timer is configured to interrupt at 128 Hz. The interrupt handler reads all 6 axes through SPI and signals a task to process the batch of samples when the internal FIFO has 128-sample new samples. It performs an IIR filter and a min-max normalization on 128 samples at a time. This processed data is then fed to the inference engine. The inference engine outputs the confidence of the gesture for each of the four gesture classes. If the confidence passes a certain percent, the gesture is printed to the UART terminal.
+In this example, the firmware reads the data from a motion sensor (BMX160) to detect gestures. The data consists of 3-axis orientation data from the accelerometer and 3-axis orientation data from the gyroscope. A timer is configured to interrupt at 128 Hz. The interrupt handler reads all 6 axes through SPI and signals a task to process the batch of samples when the internal FIFO has 128 new samples. It performs an IIR filter and a min-max normalization on 128 samples at a time. This processed data is then fed to the inference engine. The inference engine outputs the confidence of the gesture for each of the four gesture classes. If the confidence passes a certain percent, the gesture is printed to the UART terminal.
 
 The code example also provides a MTB-ML Configurator tool project file - *design.mtbml*, which points to the pre-trained NN model available in the *pretrained_models* folder.
 
 This application uses FreeRTOS. There are three tasks in the system - *sensor task*, *NN task* and *control task*. They communicate with each other through queues. Sensor data is fed to the input queue, and the result is sent to the output queue.
 
-   **Figure 2. Block diagram**
+**Figure 2. Block diagram**
 
-   ![](images/block-diagram.png)
+![](images/block-diagram.png)
 
-### Gesture classification model details
 
-The convolutional neural network (CNN) model consists of two convolutional blocks and two full connection layers. Each convolutional block includes convolutional operations, including relu and max pooling, with the addition of a batch normalization layer after the first block. The convolutional layers act as feature extractors and provide abstract representations of the input sensor data in feature maps. They capture short-term dependencies (spatial relationships) of the data. In the CNN, features are extracted and then used as inputs of fully connected network, using softmax activation for classification.
+### Gesture classification model
 
-   **Figure 3. Model diagram**
+The convolutional neural network (CNN) model consists of two convolutional blocks and two full-connection layers. Each convolutional block includes convolutional operations, including rectified linear unit (ReLU) and max pooling, with the addition of a batch normalization layer after the first block. The convolutional layers act as feature extractors and provide abstract representations of the input sensor data in feature maps. They capture short-term dependencies (spatial relationships) of the data. In the CNN, features are extracted and then used as inputs of fully connected network, using softmax activation for classification.
+
+**Figure 3. Model diagram**
 
 <img src="images/magic-wand-model.png" style="zoom:67%;" />
+
 
 ### Files and folders
 
@@ -191,7 +250,9 @@ The convolutional neural network (CNN) model consists of two convolutional block
 |-- FreeRTOSConfig.h    # FreeRTOS Configuration file
 |-- design.mtbml        # MTB-ML Configurator tool project file
 ```
-<br>
+
+**Note:** This code example supports both the CY8CKIT-028-TFT and the CY8CKIT-028-SENSE. These shields have different sensors; to support both, a change is made to the *bmi160_defs.h* file. When using CY8CKIT-028-TFT, `BMI160_CHIP_ID` is set to `0xD1`. When using CY8CKIT-028-SENSE, `BMI160_CHIP_ID` is set to `0xD8`. This is done through a series of `PREBUILD` commands in the Makefile.
+
 
 ### Resources and settings
 
@@ -207,53 +268,35 @@ The convolutional neural network (CNN) model consists of two convolutional block
 
 ## Related resources
 
-| Application notes                                            |                                                              |
-| :----------------------------------------------------------- | :----------------------------------------------------------- |
-| [AN228571](https://www.cypress.com/AN228571) – Getting started with PSoC 6 MCU on ModusToolbox | Describes PSoC 6 MCU devices and how to build your first application with ModusToolbox |
-| [AN221774](https://www.cypress.com/AN221774) – Getting started with PSoC 6 MCU on PSoC Creator | Describes PSoC 6 MCU devices and how to build your first application with PSoC Creator |
-| [AN210781](https://www.cypress.com/AN210781) – Getting started with PSoC 6 MCU with Bluetooth Low Energy connectivity on PSoC Creator | Describes PSoC 6 MCU with Bluetooth LE connectivity devices and how to build your first application with PSoC Creator |
-| [AN215656](https://www.cypress.com/AN215656) – PSoC 6 MCU: dual-CPU system design | Describes the dual-CPU architecture in PSoC 6 MCU, and shows how to build a simple dual-CPU design |
-| **Code examples**                                            |                                                              |
-| [Using ModusToolbox](https://github.com/cypresssemiconductorco/Code-Examples-for-ModusToolbox-Software) | [Using PSoC Creator](https://www.cypress.com/documentation/code-examples/psoc-6-mcu-code-examples) |
-| **Device documentation**                                     |                                                              |
-| [PSoC 6 MCU datasheets](https://www.cypress.com/search/all?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A575&f[2]=field_related_products%3A114026) | [PSoC 6 technical reference manuals](https://www.cypress.com/search/all/PSoC%206%20Technical%20Reference%20Manual?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A583) |
-| **Development kits**                                         | Buy at www.cypress.com                                       |
-| [CY8CKIT-062-BLE](https://www.cypress.com/CY8CKIT-062-BLE) PSoC 6 Bluetooth LE pioneer kit | [CY8CKIT-062-WiFi-BT](https://www.cypress.com/CY8CKIT-062-WiFi-BT) PSoC 6 Wi-Fi Bluetooth pioneer kit |
-| [CY8CPROTO-063-BLE](https://www.cypress.com/CY8CPROTO-063-BLE) PSoC 6 Bluetooth LE prototyping kit | [CY8CPROTO-062-4343W](https://www.cypress.com/CY8CPROTO-062-4343W) PSoC 6 Wi-Fi Bluetooth prototyping kit |
-| [CY8CKIT-062S2-43012](https://www.cypress.com/CY8CKIT-062S2-43012) PSoC 62S2 Wi-Fi Bluetooth pioneer kit | [CY8CPROTO-062S3-4343W](https://www.cypress.com/CY8CPROTO-062S3-4343W) PSoC 62S3 Wi-Fi Bluetooth prototyping kit |
-| [CYW9P62S1-43438EVB-01](https://www.cypress.com/CYW9P62S1-43438EVB-01) PSoC 62S1 Wi-Fi Bluetooth pioneer kit | [CYW9P62S1-43012EVB-01](https://www.cypress.com/CYW9P62S1-43012EVB-01) PSoC 62S1 Wi-Fi Bluetooth pioneer kit |
-| [CY8CKIT-064B0S2-4343W](http://www.cypress.com/CY8CKIT-064B0S2-4343W) PSoC 64 "Secure Boot" Wi-Fi Bluetooth pioneer kit | [CY8CKIT-064S0S2-4343W](http://www.cypress.com/CY8CKIT-064S0S2-4343W) PSoC 64 "Standard Secure" AWS Wi-Fi Bluetooth pioneer kit           |
-| **Libraries**                                                |                                                              |
-| PSoC 6 peripheral driver library (PDL) and docs  | [mtb-pdl-cat1](https://github.com/cypresssemiconductorco/mtb-pdl-cat1) on GitHub |
-| Hardware abstraction layer (HAL) Library and docs    | [mtb-hal-cat1](https://github.com/cypresssemiconductorco/mtb-hal-cat1) on GitHub |
-| Retarget IO - A utility library to retarget the standard input/output (STDIO) messages to a UART port | [retarget-io](https://github.com/cypresssemiconductorco/retarget-io) on GitHub |
-| **Middleware**                                               |                                                              |
-| CapSense&trade; library and docs                                   | [capsense](https://github.com/cypresssemiconductorco/capsense) on GitHub |
-| Links to all PSoC 6 MCU middleware                           | [psoc6-middleware](https://github.com/cypresssemiconductorco/psoc6-middleware) on GitHub |
-| **Tools**                                                    |                                                              |
-| [Eclipse IDE for ModusToolbox](https://www.cypress.com/modustoolbox) | The cross-platform, Eclipse-based IDE for IoT designers that supports application configuration and development targeting converged MCU and wireless systems. |
-| [PSoC Creator™](https://www.cypress.com/products/psoc-creator-integrated-design-environment-ide) | The Cypress IDE for PSoC and FM0+ MCU development. |
 
+Resources  | Links
+-----------|----------------------------------
+Application notes  | [AN228571](https://www.cypress.com/AN228571) – Getting started with PSoC&trade; 6 MCU on ModusToolbox&trade; software <br>  [AN215656](https://www.cypress.com/AN215656) – PSoC&trade; 6 MCU: Dual-CPU system design <br>
+Code examples  | [Using ModusToolbox&trade; software](https://github.com/Infineon/Code-Examples-for-ModusToolbox-Software) on GitHub
+Device documentation | [PSoC&trade; 6 MCU datasheets](https://www.cypress.com/search/all?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A575&f[2]=field_related_products%3A114026) <br> [PSoC&trade; 6 technical reference manuals](https://www.cypress.com/search/all/PSoC%206%20Technical%20Reference%20Manual?f[0]=meta_type%3Atechnical_documents&f[1]=resource_meta_type%3A583)
+Development kits | Visit www.cypress.com/microcontrollers-mcus-kits and use the options in the **Select your kit** section to filter kits by *Product family* or *Features*.
+Libraries on GitHub  | [mtb-pdl-cat1](https://github.com/infineon/mtb-pdl-cat1) – PSoC&trade; 6 peripheral driver library (PDL)  <br> [mtb-hal-cat1](https://github.com/infineon/mtb-hal-cat1) – Hardware abstraction layer (HAL) library <br> [retarget-io](https://github.com/infineon/retarget-io) – Utility library to retarget STDIO messages to a UART port
+Middleware on GitHub  | [capsense](https://github.com/infineon/capsense) – CAPSENSE&trade; library and documents <br> [psoc6-middleware](https://github.com/Infineon/modustoolbox-software#psoc-6-middleware-libraries) – Links to all PSoC&trade; 6 MCU middleware
+Tools  | [Eclipse IDE for ModusToolbox&trade; software](https://www.cypress.com/modustoolbox) – ModusToolbox&trade; software is a collection of easy-to-use software and tools enabling rapid development with Infineon MCUs, covering applications from embedded sense and control to wireless and cloud-connected systems using AIROC&trade; Wi-Fi and Bluetooth® connectivity devices.
 <br>
 
 ## Other resources
 
 Cypress provides a wealth of data at www.cypress.com to help you select the right device, and quickly and effectively integrate it into your design.
 
-For PSoC 6 MCU devices, see [How to design with PSoC 6 MCU - KBA223067](https://community.cypress.com/docs/DOC-14644) in the Cypress community.
+For PSoC&trade; 6 MCU devices, see [How to design with PSoC&trade; 6 MCU - KBA223067](https://community.cypress.com/docs/DOC-14644) in the Cypress community.
 
 <br>
 
 ## Document history
 
-Document Title: *CE233112* - *Machine Learning: gesture classification*
+Document title: *CE233112* - *Machine Learning: gesture classification*
 
-| Version | Description of Change |
-| ------- | --------------------- |
-| 1.0.0   | New code example      |
+| Version | Description of change                                        |
+| ------- | ------------------------------------------------------------ |
+| 1.0.0   | New code example                                             |
+| 1.1.0   | Updated model, new CY_028_TFT support, better gesture description |
 ------
-
-All other trademarks or registered trademarks referenced herein are the property of their respective owners.
 
 ![banner](images/ifx-cy-banner.png)
 
