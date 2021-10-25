@@ -73,7 +73,7 @@ VERBOSE=
 NN_TYPE=float
 
 # Model Name to be loaded to the firmware
-NN_MODEL_NAME="magic_wand"
+NN_MODEL_NAME="MAGIC_WAND"
 
 # Folder name containing the model and regression data
 NN_MODEL_FOLDER=./mtb_ml_gen

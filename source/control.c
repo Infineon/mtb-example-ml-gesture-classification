@@ -39,11 +39,9 @@
 * of such system or application assumes all risk of such use and in doing
 * so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
+#include <gesture.h>
 #include "control.h"
-
-#include "nn_utils.h"
-#include "nn.h"
-#include "sensor.h"
+#include "mtb_ml_utils.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -54,89 +52,71 @@
 #define MIN_CONFIDENCE 0.97
 
 /*******************************************************************************
-* Function Name: control_task
+* Function Name: control
 ********************************************************************************
 * Summary:
-*   A task used to read a result from the inference engine, this prints the
+*   A function used to read a result from the inference engine, this prints the
 *   the class and the confidence of each class.
 *
 * Parameters:
-*     arg: not used
+*     result_buffer: The result buffer from the inference engine
+*     model_output_size: Output size from the inference engine
 *
 *
 *******************************************************************************/
-void control_task( void * arg )
+void control(MTB_ML_DATA_T* result_buffer, int model_output_size)
 {
-    (void)arg;
-
-    NN_OUT_Type  *nn_result_buffer;
-
-    /* Allocate memory for the output buffers */
-    nn_result_buffer = (NN_OUT_Type *) malloc(nn_gesture_obj.model_xx_info.n_out_classes * sizeof(NN_OUT_Type));
-
-#if CY_ML_FIXED_POINT
-    float *nn_float_buffer = (float *) malloc(nn_gesture_obj.model_xx_info.n_out_classes * sizeof(float));
-#else
-    float *nn_float_buffer;
+    /* Get the q-format from the model */
+#if !COMPONENT_ML_FLOAT32
+    uint8_t q_format = mtb_ml_model_get_output_q_fraction_bits(magic_wand_obj);
 #endif
 
-    for(;;)
-    {
-        /* Get the result from the model */
-        nn_result(&nn_gesture_obj, nn_result_buffer);
+    int class_index = mtb_ml_utils_find_max(result_buffer, model_output_size);
 
 #if CY_ML_FIXED_POINT_16_IN
-        /* Convert 16bit fixed-point output to floating-point for visualization */
-        nn_utils_convert_int16_to_flt(nn_result_buffer,
-                                      nn_float_buffer,
-                                      nn_gesture_obj.model_xx_info.n_out_classes,
-                                      nn_gesture_obj.in_out_fixed_point_q);
+    /* Convert 16bit fixed-point output to floating-point for visualization */
+    float *nn_float_buffer = (float *) malloc(model_output_size * sizeof(float));
+    mtb_ml_utils_convert_int16_to_flt(result_buffer, nn_float_buffer, model_output_size, q_format);
 #elif CY_ML_FIXED_POINT_8_IN
-        /* Convert 8bit fixed-point output to floating-point for visualization */
-        nn_utils_convert_int8_to_flt(nn_result_buffer,
-                                              nn_float_buffer,
-                                              nn_gesture_obj.model_xx_info.n_out_classes,
-                                              nn_gesture_obj.in_out_fixed_point_q);
+    /* Convert 8bit fixed-point output to floating-point for visualization */
+    float *nn_float_buffer = (float *) malloc(model_output_size * sizeof(float));
+    mtb_ml_utils_convert_int8_to_flt(result_buffer, nn_float_buffer, model_output_size, q_format);
 #else
-        nn_float_buffer = nn_result_buffer;
+    float *nn_float_buffer = result_buffer;
 #endif
 
-        /* Find the class with the highest confidence */
-        uint8_t class_index = nn_utils_find_max_index_flt(nn_float_buffer, nn_gesture_obj.model_xx_info.n_out_classes);
+    /* Clear the screen */
+    printf("\x1b[2J\x1b[;H");
 
-        /* Clear the screen */
-        printf("\x1b[2J\x1b[;H");
+    printf("| Gesture     | Square | Circle | Side-To-Side |  None  | |  Detection  |\r\n");
+    printf("|-------------|--------|--------|--------------|--------| |-------------|\r\n");
 
-        printf("| Gesture     | Square | Circle | Side-To-Side |  None  | |  Detection  |\r\n");
-        printf("|-------------|--------|--------|--------------|--------| |-------------|\r\n");
+    /* Prints the confidence level of each class */
+    printf("| Confidence  |  %%%-3d      %%%-3d       %%%-3d        %%%-3d       ", (int)(nn_float_buffer[0]*100), (int)(nn_float_buffer[1]*100), (int)(nn_float_buffer[2]*100), (int)(nn_float_buffer[3]*100));
 
-        /* Prints the confidence level of each class */
-        printf("| Confidence  |  %%%-3d      %%%-3d       %%%-3d        %%%-3d       ", (int)(nn_float_buffer[0]*100), (int)(nn_float_buffer[1]*100), (int)(nn_float_buffer[2]*100), (int)(nn_float_buffer[3]*100));
-
-        /* Check the confidence for the selected class */
-        if(MIN_CONFIDENCE < nn_float_buffer[class_index])
+    /* Check the confidence for the selected class */
+    if(MIN_CONFIDENCE < nn_float_buffer[class_index])
+    {
+        /* Switch statement for the selected class */
+        switch (class_index)
         {
-            /* Switch statement for the selected class */
-            switch (class_index)
-            {
-                case 0:
-                    printf("Square\r\n");
-                    break;
-                case 1:
-                    printf("Circle\r\n");
-                    break;
-                case 2:
-                    printf("Side-To-Side\r\n");
-                    break;
-                case 3:
-                    printf("None\r\n");
-                    break;
-            }
+            case 0:
+                printf("Square\r\n");
+                break;
+            case 1:
+                printf("Circle\r\n");
+                break;
+            case 2:
+                printf("Side-To-Side\r\n");
+                break;
+            case 3:
+                printf("None\r\n");
+                break;
         }
-        /* If the confidence is not high, no gesture detected */
-        else
-        {
-            printf("None\r\n");
-        }
+    }
+    /* If the confidence is not high, no gesture detected */
+    else
+    {
+        printf("None\r\n");
     }
 }

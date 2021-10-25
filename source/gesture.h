@@ -42,18 +42,20 @@
 #ifndef SENSOR_H
 #define SENSOR_H
 
-#include "nn.h"
+#include "cyabs_rtos.h"
+#include "mtb_ml_model.h"
 
 /******************************************************************************
- * Structures
+ * Constants
  *****************************************************************************/
-extern nn_obj_t nn_gesture_obj;
 
+
+extern mtb_ml_model_t *magic_wand_obj;
 /*******************************************************************************
 * Functions
 *******************************************************************************/
 cy_rslt_t sensor_init(void);
-void sensor_task(void *arg);
+void gesture_task(void *arg);
 
 
 #endif /* SENSOR_H */

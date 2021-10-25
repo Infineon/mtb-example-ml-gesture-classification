@@ -40,7 +40,7 @@
 * so agrees to indemnify Cypress against all liability.
 *******************************************************************************/
 
-#include <control.h>
+#include <gesture.h>
 #include "cy_pdl.h"
 #include "cyhal.h"
 #include "cybsp.h"
@@ -49,7 +49,6 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
-#include "sensor.h"
 
 /*******************************************************************************
 * Constants
@@ -70,7 +69,7 @@ volatile int uxTopUsedPriority;
 * This is the main function for CM4 CPU. It does...
 *    1. Initializes the BSP.
 *    2. Prints welcome message
-*    3. Initializes two tasks to run the inference engine
+*    3. Initializes the task to run the inference engine
 *    4. Starts the scheduler
 *
 * Parameters:
@@ -107,16 +106,14 @@ int main(void)
            "Gesture Detection Code Example"
            "****************** \r\n\n");
 
-    /* Create two tasks, one to run the inference engine the other to get the results */
-    xTaskCreate(sensor_task, "runinferenceengine", TASK_STACK_SIZE, NULL, TASK_PRIORITY, NULL);
-    xTaskCreate(control_task, "getinferenceresult", TASK_STACK_SIZE, NULL, TASK_PRIORITY, NULL) ;
+    /* Create one task, processes all sensor data and feeds it to the inference engine */
+    xTaskCreate(gesture_task, "runinferenceengine", TASK_STACK_SIZE, NULL, TASK_PRIORITY, NULL);
 
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
 
     for (;;)
     {
-
     }
 }
 

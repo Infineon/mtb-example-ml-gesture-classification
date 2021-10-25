@@ -1,4 +1,4 @@
-# Machine Learning: gesture classification
+# Machine Learning: Gesture classification
 
 This code example demonstrates how to perform gesture classification based on motion sensor (accelerometer and gyroscope) data. The code example comes with a pre-trained model that classifies the following gestures: circle, square, and side-to-side.
 
@@ -6,14 +6,14 @@ For more details, see the [ModusToolbox&trade; Machine Learning solution](https:
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-ml-gesture-classification)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzMxMTIiLCJTcGVjIE51bWJlciI6IjAwMi0zMzExMiIsIkRvYyBUaXRsZSI6Ik1hY2hpbmUgTGVhcm5pbmc6IGdlc3R1cmUgY2xhc3NpZmljYXRpb24iLCJyaWQiOiJucnNoIiwiRG9jIHZlcnNpb24iOiIxLjEuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzMxMTIiLCJTcGVjIE51bWJlciI6IjAwMi0zMzExMiIsIkRvYyBUaXRsZSI6Ik1hY2hpbmUgTGVhcm5pbmc6IEdlc3R1cmUgY2xhc3NpZmljYXRpb24iLCJyaWQiOiJucnNoIiwiRG9jIHZlcnNpb24iOiIyLjAuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 **Disclaimer:** The model provided is an example and may need customization for generalization or to meet certain performance criteria. If you require large-scale production, contact your sales representative.
 
 
 ## Requirements
 
-- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.3 with ModusToolbox&trade; tools patch 2.3.1
+- [ModusToolbox&trade; software](https://www.cypress.com/products/modustoolbox-software-environment) v2.4
 - Board support package (BSP) minimum required version: 2.0.0
 - Programming language: C
 - Associated parts: All [PSoC&trade; 6 MCU](http://www.cypress.com/PSoC6) parts
@@ -21,7 +21,7 @@ For more details, see the [ModusToolbox&trade; Machine Learning solution](https:
 
 ## Supported toolchains (make variable 'TOOLCHAIN')
 
-- GNU Arm® embedded compiler v9.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
+- GNU Arm® embedded compiler v10.3.1 (`GCC_ARM`) - Default value of `TOOLCHAIN`
 - Arm&reg; compiler v6.13 (`ARM`)
 - IAR C/C++ compiler v8.42.2 (`IAR`)
 
@@ -33,7 +33,7 @@ For more details, see the [ModusToolbox&trade; Machine Learning solution](https:
 
 ## Hardware setup
 
-Connect the CY8CKIT-028-TFT shield to the header of your baseboard, which is compatible with Arduino.
+Connect the CY8CKIT-028-TFT shield to the baseboard header compatible with Arduino.
 
 The code example also works with the CY8CKIT-028-SENSE shield. See the [Operation](#operation) section for more information.
 
@@ -41,7 +41,7 @@ The code example also works with the CY8CKIT-028-SENSE shield. See the [Operatio
 
 Install a terminal emulator if you don't have one. Instructions in this document use [Tera Term](https://ttssh2.osdn.jp/index.html.en).
 
-By default, the Makefile uses a model that comes with the code example. The pre-trained neural net (NN) model is located in the *pretrained_models* folder. The output files location is set to *mtb_ml_gen*; the project name is set to *magic_wand*. You can use the MTB-ML Configurator Tool to open the *design.mtbml* model to evaluate the model.
+By default, the Makefile uses a model that comes with the code example. The pre-trained neural net (NN) model is located in the *pretrained_models* folder. The output files location is set to *mtb_ml_gen*; the project name is set to *magic_wand*. You can use the MTB-ML configurator tool to open the *design.mtbml* model to evaluate the model.
 
 ## Using the code example
 
@@ -166,23 +166,22 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
 
    </details>
 
-5. After programming, the application starts automatically. Confirm that "Gesture Classification Example" and some log data are printed on the UART terminal, the gesture classifications and confidence are updated continuously.
+5. After programming, the application starts automatically. Confirm that "Gesture Classification Example" and some log data are printed on the UART terminal. The gesture classifications and confidence are updated continuously.
 
-6. Hold the board with the following orientation while moving your arm to complete a gesture:
+6. Hold the board with the orientation as shown below while moving your arm to complete a gesture:
 
    **Figure 1. Board orientation**
 
    ![](images/board-orientation.jpg)
 
-7. Perform a counter-clockwise circle movement continuously. Confirm that the UART terminal prints the gesture as [**Circle**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/circle.gif), and the confidence of the circle increases past 97%. For best results, repeatedly perform a circle movement that has a diameter of one foot, and complete one circle per second.
+7. Perform a counter-clockwise circle movement continuously. Confirm that the UART terminal prints the gesture as [**Circle**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/circle.gif), and the confidence of the circle shape increases past 97%. For best results, repeatedly perform circle movements each in one second, with a diameter of one foot.
 
    **Figure 2. Circle gesture**
 
    <img src="images/circle.gif" style="zoom: 25%;" />
 
 
-
-8. Perform a counter-clockwise square movement continuously. Confirm that the UART terminal prints the gesture as [**Square**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/square.gif), and the confidence of the square increases past 97%. For best results, repeatedly perform a square movement that has a side length of one foot, and complete one square in two seconds.
+8. Perform a counter-clockwise square movement continuously. Confirm that the UART terminal prints the gesture as [**Square**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/square.gif), and the confidence of the square shape increases past 97%. For best results, repeatedly perform square shape movements, each in two seconds, with a side length of one foot.
 
    **Figure 3. Square gesture**
 
@@ -190,7 +189,7 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
 
 
 
-9. Perform a side-to-side movement (left <-> right) continuously, confirm that the UART terminal prints the gesture as [**Side-to-side**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/side-to-side.gif), and the confidence increases past 97%. For best results, repeatedly perform a one-foot-wide left-to-right movement in half-a-second.
+9. Perform a side-to-side movement (left <-> right) continuously. Confirm that the UART terminal prints the gesture as [**Side-to-side**](https://github.com/Infineon/mtb-example-ml-gesture-classification/blob/master/images/side-to-side.gif), and the confidence increases past 97%. For best results, repeatedly perform one-foot-wide left-to-right movement in half-a-second each.
 
    **Figure 4. Side-to-side gesture**
 
@@ -201,12 +200,12 @@ If using a PSoC&trade; 64 "Secure" MCU kit (like CY8CKIT-064B0S2-4343W), the PSo
 
 **Note:** If the confidence is lower than 97%, the gesture will register as **None**.
 
-**Note:** Figures 2-4 above may have low frame rates. Click on the link to redirect to GitHub for better quality.
+**Note:** Figures 2-4 above may have low frame rates. Click on the embedded links in steps 7, 8, and 9 to redirect to GitHub for better quality.
 
 
 ## Debugging
 
-You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For more details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox&trade; user guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
+You can debug the example to step through the code. In the IDE, use the **\<Application Name> Debug (KitProg3_MiniProg4)** configuration in the **Quick Panel**. For details, see the "Program and debug" section in the [Eclipse IDE for ModusToolbox&trade; user guide](https://www.cypress.com/MTBEclipseIDEUserGuide).
 
 **Note:** **(Only while debugging)** On the CM4 CPU, some code in `main()` may execute before the debugger halts at the beginning of `main()`. This means that some code executes twice - once before the debugger stops execution, and again after the debugger resets the program counter to the beginning of `main()`. See [KBA231071](https://community.cypress.com/docs/DOC-21143) to learn about this and for the workaround.
 
@@ -215,9 +214,9 @@ You can debug the example to step through the code. In the IDE, use the **\<Appl
 
 In this example, the firmware reads the data from a motion sensor (BMX160) to detect gestures. The data consists of 3-axis orientation data from the accelerometer and 3-axis orientation data from the gyroscope. A timer is configured to interrupt at 128 Hz. The interrupt handler reads all 6 axes through SPI and signals a task to process the batch of samples when the internal FIFO has 128 new samples. It performs an IIR filter and a min-max normalization on 128 samples at a time. This processed data is then fed to the inference engine. The inference engine outputs the confidence of the gesture for each of the four gesture classes. If the confidence passes a certain percent, the gesture is printed to the UART terminal.
 
-The code example also provides a MTB-ML Configurator tool project file - *design.mtbml*, which points to the pre-trained NN model available in the *pretrained_models* folder.
+The code example also provides a MTB-ML configurator tool project file - *design.mtbml*, which points to the pre-trained NN model available in the *pretrained_models* folder.
 
-This application uses FreeRTOS. There are three tasks in the system - *sensor task*, *NN task* and *control task*. They communicate with each other through queues. Sensor data is fed to the input queue, and the result is sent to the output queue.
+This application uses FreeRTOS. There is one task in the system - *gesture task*. The gesture task pre-processes all data and passes the data to the inference engine. FreeRTOS is used so that the code example can be expanded.
 
 **Figure 2. Block diagram**
 
@@ -226,7 +225,9 @@ This application uses FreeRTOS. There are three tasks in the system - *sensor ta
 
 ### Gesture classification model
 
-The convolutional neural network (CNN) model consists of two convolutional blocks and two full-connection layers. Each convolutional block includes convolutional operations, including rectified linear unit (ReLU) and max pooling, with the addition of a batch normalization layer after the first block. The convolutional layers act as feature extractors and provide abstract representations of the input sensor data in feature maps. They capture short-term dependencies (spatial relationships) of the data. In the CNN, features are extracted and then used as inputs of fully connected network, using softmax activation for classification.
+The convolutional neural network (CNN) model consists of two convolutional blocks and two full-connection layers. Each convolutional block includes convolutional operations, including rectified linear unit (ReLU) and max pooling, with the addition of a batch normalization layer after the first block.
+
+The convolutional layers act as feature extractors and provide abstract representations of the input sensor data in feature maps. They capture short-term dependencies (spatial relationships) of the data. In the CNN, features are extracted and then used as inputs of fully connected network, using softmax activation for classification.
 
 **Figure 3. Model diagram**
 
@@ -237,21 +238,18 @@ The convolutional neural network (CNN) model consists of two convolutional block
 
 ```
 |-- mtb_ml_gen/         # Contains the model files
-|-- pretrained_models/  # Contains the H5 format model (used by the ML Configurator tool)
+|-- pretrained_models/  # Contains the H5 format model (used by the ML configurator tool)
 |-- source              # Contains the source code files for this example
-   |- sensor.c/h        # Implements the sensor task
+   |- gesture.c/h       # Implements the gesture task
    |- processing.c/h    # Implements the IIR filter and normalization functions
    |- control.c/h       # Implements the control task
-|-- nn                  # Contains NN-related files
-   |- nn_utils.c/h      # Provides utility functions to manipulate the NN inputs/outputs
-   |- nn.c/h            # Implements the NN task, which executes the inference engine
 |-- fifo                # Contains a FIFO library
    |- cy_fifo.c/h       # Implements a FIFO in firmware
 |-- FreeRTOSConfig.h    # FreeRTOS Configuration file
-|-- design.mtbml        # MTB-ML Configurator tool project file
+|-- design.mtbml        # MTB-ML configurator tool project file
 ```
 
-**Note:** This code example supports both the CY8CKIT-028-TFT and the CY8CKIT-028-SENSE. These shields have different sensors; to support both, a change is made to the *bmi160_defs.h* file. When using CY8CKIT-028-TFT, `BMI160_CHIP_ID` is set to `0xD1`. When using CY8CKIT-028-SENSE, `BMI160_CHIP_ID` is set to `0xD8`. This is done through a series of `PREBUILD` commands in the Makefile.
+**Note:** This code example supports both the CY8CKIT-028-TFT and the CY8CKIT-028-SENSE shields. These shields have different sensors; to support both, a change is made to the *bmi160_defs.h* file. When using CY8CKIT-028-TFT, `BMI160_CHIP_ID` is set to `0xD1`. When using CY8CKIT-028-SENSE, `BMI160_CHIP_ID` is set to `0xD8`. This is done through a series of `PREBUILD` commands in the Makefile.
 
 
 ### Resources and settings
@@ -290,15 +288,15 @@ For PSoC&trade; 6 MCU devices, see [How to design with PSoC&trade; 6 MCU - KBA22
 
 ## Document history
 
-Document title: *CE233112* - *Machine Learning: gesture classification*
+Document title: *CE233112* - *Machine Learning: Gesture classification*
 
 | Version | Description of change                                        |
 | ------- | ------------------------------------------------------------ |
 | 1.0.0   | New code example                                             |
 | 1.1.0   | Updated model, new CY_028_TFT support, better gesture description |
+| 2.0.0   | Update includes support for MTBML 1.2 and support for machine learning middleware |
 ------
 
-![banner](images/ifx-cy-banner.png)
 
 -------------------------------------------------------------------------------
 

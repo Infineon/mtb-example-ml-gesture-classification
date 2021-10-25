@@ -42,9 +42,11 @@
 #ifndef CONTROL_H
 #define CONTROL_H
 
+#include "mtb_ml_common.h"
+
 /*******************************************************************************
 * Functions
 *******************************************************************************/
-void control_task( void * arg );
+void control(MTB_ML_DATA_T* result_buffer, int model_output_size);
 
 #endif /* CONTROL_H */
