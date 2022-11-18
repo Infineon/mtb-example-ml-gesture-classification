@@ -8,7 +8,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2021-2022, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -107,7 +107,7 @@ int main(void)
            "****************** \r\n\n");
 
     /* Create one task, processes all sensor data and feeds it to the inference engine */
-    xTaskCreate(gesture_task, "runinferenceengine", TASK_STACK_SIZE, NULL, TASK_PRIORITY, NULL);
+    xTaskCreate(gesture_task, "Gesture task", TASK_STACK_SIZE, NULL, TASK_PRIORITY, NULL);
 
     /* Start the FreeRTOS scheduler */
     vTaskStartScheduler();
@@ -129,7 +129,7 @@ void vApplicationDaemonTaskStartupHook(void)
     /* Initializes the inference engine */
     cy_rslt_t result;
 
-    result = sensor_init();
+    result = gesture_init();
     if(CY_RSLT_SUCCESS != result)
     {
         /* Reset the system on sensor fail */

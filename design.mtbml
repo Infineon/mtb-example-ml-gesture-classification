@@ -1,41 +1,54 @@
 {
+    "app": "ML",
+    "calibration_data": {
+        "active_state": true,
+        "feat_col_count": 1,
+        "feat_col_first": 0,
+        "input_calibration_type": "NPZ",
+        "input_format": "JPEG",
+        "path": "train/calibration.npz",
+        "target_col_count": 1,
+        "target_col_first": 0
+    },
     "filetype": "modustoolbox-ml-configurator",
+    "formatVersion": "3",
+    "lastSavedWith": "ML Configurator",
+    "lastSavedWithVersion": "2.0.0",
     "model": {
-        "framework": "KERAS",
-        "optimization": "SIZE",
+        "framework": "TFLITE",
+        "optimization_ifx": "SIZE",
+        "optimization_tflm": false,
         "path": "pretrained_models/Magic_wand_model.h5",
         "quantization": {
             "float32": true,
-            "int16": true,
             "int16x16": false,
             "int16x8": false,
-            "int8": true,
-            "int8x8": false
-        }
-    },
-    "name": "magic_wand",
-    "output_dir": "mtb_ml_gen",
-    "target": "CY8C62xA",
-    "validation": {
-        "feat_col_count": 127,
-        "feat_col_first": 1,
-        "feat_col_last": 0,
-        "inputFormat": "CSV",
-        "inputType": "PRNG",
-        "max_samples": 100,
-        "path": "../../output_O_nrsh3.csv",
-        "quantization": {
-            "float32": true,
-            "int16": true,
-            "int16x16": true,
-            "int16x8": true,
-            "int8": true,
             "int8x8": true
         },
-        "target_col_count": 5,
-        "target_col_first": 0,
-        "target_cols": "0"
+        "sparsity_tflm": false,
+        "tflm_model_quantization": "FLOAT"
     },
-    "version": 1
+    "name": "MAGIC_WAND",
+    "output_dir": "mtb_ml_gen",
+    "target": "PSoC6",
+    "toolsPackage": "ModusToolbox™ Machine Learning Technology Package 2.0.0",
+    "validation": {
+        "feat_col_count": 1,
+        "feat_col_first": 0,
+        "input_format": "JPEG",
+        "input_type": "PRNG",
+        "max_samples": 1000,
+        "path": "",
+        "quantization": {
+            "float32": true,
+            "int16x16": true,
+            "int16x8": true,
+            "int8x8": true
+        },
+        "target": {
+            "target_quantization": "int8x8"
+        },
+        "target_col_count": 1,
+        "target_col_first": 0
+    }
 }
-

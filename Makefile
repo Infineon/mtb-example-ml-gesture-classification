@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2018-2021, Cypress Semiconductor Corporation (an Infineon company)
+# Copyright 2018-2022, Cypress Semiconductor Corporation (an Infineon company)
 # SPDX-License-Identifier: Apache-2.0
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,14 @@
 ################################################################################
 # Basic Configuration
 ################################################################################
+
+#Type of ModusToolbox Makefile Options include:
+#
+#COMBINED    -- Top Level Makefile usually for single standalone application
+#APPLICATION -- Top Level Makefile usually for multi project application
+#PROJECT     -- Project Makefile under Application
+#
+MTB_TYPE=COMBINED
 
 # Target board/hardware (BSP).
 # To change the target, it is recommended to use the Library manager
@@ -73,15 +81,22 @@ VERBOSE=
 NN_TYPE=float
 
 # Model Name to be loaded to the firmware
-NN_MODEL_NAME="MAGIC_WAND"
+NN_MODEL_NAME=MAGIC_WAND
 
 # Folder name containing the model and regression data
 NN_MODEL_FOLDER=./mtb_ml_gen
 
+# Choose the inference engine
+# tflm      -- TensorFlow Lite for Microcontrollers inference engine with interpreter
+# tflm_less -- TensorFlow Lite for Microcontrollers inference engine interpreter-less
+# ifx       -- Infineon ModusToolbox ML inference engine
+NN_INFERENCE_ENGINE=tflm
+
 # Shield used to gather IMU data
 #
 # CY_028_TFT_SHIELD    -- Using the 028-TFT shield
-# CY_028_SENSE_SHIELD  -- Using the 028-SENSE shield
+# CY_028_SENSE_SHIELD_v1  -- Using the 028-SENSE shield rev**
+# CY_028_SENSE_SHIELD_v2  -- Using the 028-SENSE shield rev*A or later
 SHIELD_DATA_COLLECTION=CY_028_TFT_SHIELD
 
 ################################################################################
@@ -109,37 +124,67 @@ DISABLE_COMPONENTS=
 # by default, or otherwise not found by the build system.
 SOURCES=
 
+NN_MODEL_FOLDER=mtb_ml_gen
+
+# Select only the regression and model files that belong to the desired
+# settings. 
+MODEL_PREFIX=$(subst $\",,$(NN_MODEL_NAME))
+CY_IGNORE+=$(NN_MODEL_FOLDER)
+# Add the model file based on the inference and data types
+SOURCES+=$(wildcard $(NN_MODEL_FOLDER)/mtb_ml_models/$(MODEL_PREFIX)_$(NN_INFERENCE_ENGINE)_model_$(NN_TYPE).c*)
+
+# Ignore any other model and regression data files
+CY_IGNORE+=$(LIST_IGNORE_MODELS)
+CY_IGNORE+=$(LIST_IGNORE_REGDATA)
+
 # Like SOURCES, but for include directories. Value should be paths to
 # directories (without a leading -I).
-INCLUDES=$(NN_MODEL_FOLDER)/mtb_ml_regression_data $(NN_MODEL_FOLDER)/mtb_ml_models source
+INCLUDES=$(NN_MODEL_FOLDER)/mtb_ml_models source
 
 # Add additional defines to the build process (without a leading -D).
 DEFINES=MODEL_NAME=$(NN_MODEL_NAME)
 
+# Add additional define to select the inference engine
+ifeq (tflm, $(NN_INFERENCE_ENGINE))
+COMPONENTS+=ML_TFLM_INTERPRETER IFX_CMSIS_NN
+DEFINES+=TF_LITE_STATIC_MEMORY
+endif
+
+ifeq (tflm_less, $(NN_INFERENCE_ENGINE))
+COMPONENTS+=ML_TFLM_INTERPRETER_LESS IFX_CMSIS_NN
+DEFINES+=TF_LITE_STATIC_MEMORY TF_LITE_MICRO_USE_OFFLINE_OP_USER_DATA
+endif
+
+ifeq (ifx, $(NN_INFERENCE_ENGINE))
+COMPONENTS+=ML_IFX IFX_CMSIS_NN
+endif
+
+
 # Depending which Neural Network Type, add a specific DEFINE and COMPONENT
 ifeq (float, $(NN_TYPE))
-DEFINES+=CY_ML_FLOATING_POINT_fltxflt_NN=1
 COMPONENTS+=ML_FLOAT32
 endif
 ifeq (int16x16, $(NN_TYPE))
-DEFINES+=CY_ML_FIXED_POINT_16_IN=1 CY_ML_FIXED_POINT_16_NN=1 
 COMPONENTS+=ML_INT16x16
 endif
 ifeq (int16x8, $(NN_TYPE))
-DEFINES+=CY_ML_FIXED_POINT_16_IN=1 CY_ML_FIXED_POINT_8_NN=1 
 COMPONENTS+=ML_INT16x8
 endif
 ifeq (int8x8, $(NN_TYPE))
-DEFINES+=CY_ML_FIXED_POINT_8_IN=1 CY_ML_FIXED_POINT_8_NN=1
 COMPONENTS+=ML_INT8x8
 endif
 
 # Depending which shield is used for data collection, add specific DEFINE
 ifeq (CY_028_TFT_SHIELD, $(SHIELD_DATA_COLLECTION))
-DEFINES+=CY_BMI_160_IMU=1
+DEFINES+=CY_BMI_160_IMU_I2C=1
 endif
-ifeq (CY_028_SENSE_SHIELD, $(SHIELD_DATA_COLLECTION))
-DEFINES+=CY_BMX_160_IMU=1
+ifeq (CY_028_SENSE_SHIELD_v1, $(SHIELD_DATA_COLLECTION))
+DEFINES+=CY_BMX_160_IMU_SPI=1
+DEFINES+=CY_IMU_SPI=1
+endif
+ifeq (CY_028_SENSE_SHIELD_v2, $(SHIELD_DATA_COLLECTION))
+DEFINES+=CY_BMI_160_IMU_SPI=1
+DEFINES+=CY_IMU_SPI=1
 endif
 
 # Select softfp or hardfp floating point. Default is softfp.
@@ -178,7 +223,7 @@ PREBUILD+=rm -rf bmi160;
 PREBUILD+=mkdir bmi160/;
 PREBUILD+=cp $(SEARCH_BMI160_driver)/bmi160* bmi160/;
 PREBUILD+=cp $(SEARCH_BMI160_driver)/LICENSE bmi160/;
-ifeq (CY_028_SENSE_SHIELD, $(SHIELD_DATA_COLLECTION))
+ifeq (CY_028_SENSE_SHIELD_v1, $(SHIELD_DATA_COLLECTION))
 PREBUILD+=sed -i 's/UINT8_C(0xD1)/UINT8_C(0xD8)/' bmi160/bmi160_defs.h;
 endif
 CY_IGNORE+=$(SEARCH_BMI160_driver)

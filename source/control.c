@@ -1,14 +1,14 @@
 /******************************************************************************
 * File Name:   control.c
 *
-* Description: This file contains the implementation to read a result from the
-*                 inference engine.
+* Description: This file contains the implementation to print the results from 
+*              the inference engine.
 *
 * Related Document: See README.md
 *
 *
 *******************************************************************************
-* Copyright 2021, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2021-2022, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -42,6 +42,7 @@
 #include <gesture.h>
 #include "control.h"
 #include "mtb_ml_utils.h"
+#include "gesture_names.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,13 +50,13 @@
 /*******************************************************************************
 * Constants
 *******************************************************************************/
-#define MIN_CONFIDENCE 0.97
+#define MIN_CONFIDENCE 0.60
 
 /*******************************************************************************
 * Function Name: control
 ********************************************************************************
 * Summary:
-*   A function used to read a result from the inference engine, this prints the
+*   A function used to print the results from the inference engine, such as the
 *   the class and the confidence of each class.
 *
 * Parameters:
@@ -66,21 +67,13 @@
 *******************************************************************************/
 void control(MTB_ML_DATA_T* result_buffer, int model_output_size)
 {
-    /* Get the q-format from the model */
-#if !COMPONENT_ML_FLOAT32
-    uint8_t q_format = mtb_ml_model_get_output_q_fraction_bits(magic_wand_obj);
-#endif
-
+    /* Get the class with the highest confidence */
     int class_index = mtb_ml_utils_find_max(result_buffer, model_output_size);
 
-#if CY_ML_FIXED_POINT_16_IN
+#if !COMPONENT_ML_FLOAT32
     /* Convert 16bit fixed-point output to floating-point for visualization */
     float *nn_float_buffer = (float *) malloc(model_output_size * sizeof(float));
-    mtb_ml_utils_convert_int16_to_flt(result_buffer, nn_float_buffer, model_output_size, q_format);
-#elif CY_ML_FIXED_POINT_8_IN
-    /* Convert 8bit fixed-point output to floating-point for visualization */
-    float *nn_float_buffer = (float *) malloc(model_output_size * sizeof(float));
-    mtb_ml_utils_convert_int8_to_flt(result_buffer, nn_float_buffer, model_output_size, q_format);
+    mtb_ml_utils_model_dequantize(magic_wand_obj, nn_float_buffer);
 #else
     float *nn_float_buffer = result_buffer;
 #endif
@@ -88,11 +81,22 @@ void control(MTB_ML_DATA_T* result_buffer, int model_output_size)
     /* Clear the screen */
     printf("\x1b[2J\x1b[;H");
 
-    printf("| Gesture     | Square | Circle | Side-To-Side |  None  | |  Detection  |\r\n");
-    printf("|-------------|--------|--------|--------------|--------| |-------------|\r\n");
-
     /* Prints the confidence level of each class */
-    printf("| Confidence  |  %%%-3d      %%%-3d       %%%-3d        %%%-3d       ", (int)(nn_float_buffer[0]*100), (int)(nn_float_buffer[1]*100), (int)(nn_float_buffer[2]*100), (int)(nn_float_buffer[3]*100));
+    printf("| Gesture         | Confidence\r\n");
+    printf("--------------------------------\r\n");
+    printf("| %s:", gesture_one);
+    printf("%s %%%-3d\r\n", dash_ges_one, (int)(nn_float_buffer[0]*100 + 0.5));
+    printf("--------------------------------\r\n");
+    printf("| %s:", gesture_two);
+    printf("%s %%%-3d\r\n", dash_ges_two, (int)(nn_float_buffer[1]*100 + 0.5));
+    printf("--------------------------------\r\n");
+    printf("| %s:", gesture_three);
+    printf("%s %%%-3d\r\n", dash_ges_three, (int)(nn_float_buffer[2]*100 + 0.5));
+    printf("--------------------------------\r\n");
+    printf("| %s:", gesture_four);
+    printf("%s %%%-3d\r\n", dash_ges_four, (int)(nn_float_buffer[3]*100 + 0.5));
+    printf("--------------------------------\r\n");
+    printf("| Detection:        ");
 
     /* Check the confidence for the selected class */
     if(MIN_CONFIDENCE < nn_float_buffer[class_index])
@@ -101,22 +105,23 @@ void control(MTB_ML_DATA_T* result_buffer, int model_output_size)
         switch (class_index)
         {
             case 0:
-                printf("Square\r\n");
+                printf("%s\r\n", gesture_one);
                 break;
             case 1:
-                printf("Circle\r\n");
+                printf("%s\r\n", gesture_two);
                 break;
             case 2:
-                printf("Side-To-Side\r\n");
+                printf("%s\r\n", gesture_three);
                 break;
             case 3:
-                printf("None\r\n");
+                printf("%s\r\n", gesture_four);
                 break;
         }
     }
     /* If the confidence is not high, no gesture detected */
     else
     {
-        printf("None\r\n");
+        printf("%s\r\n", gesture_four);
     }
+    free(nn_float_buffer);
 }
