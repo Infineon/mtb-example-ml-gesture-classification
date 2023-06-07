@@ -68,7 +68,7 @@ import datetime
 from data_load import DataLoader
 import numpy as np
 import tensorflow as tf
-
+import tensorflow_model_optimization as tfmot
 
 class TrainModel(object):
 
@@ -76,7 +76,7 @@ class TrainModel(object):
         self.logdir = "logs/" + EXEC_TIME
         self.model_name = "Magic_wand_model"
         self.seq_length = 128
-        self.epochs = 20
+        self.epochs = 10
         self.batch_size = 64
 
     def reshape_function(self, data, label):
@@ -243,6 +243,76 @@ class TrainModel(object):
 
         plot_confusion_matrix(confusion, labels=[classes[0], classes[1], classes[2], classes[3]],
                               path=f"{self.logdir}/confusion_matrix_square.png")
+                              
+        self.prune_model(model, train_data, valid_data, test_data, args.sparsity_level)
+
+    def prune_model(self, model, train_data, valid_data, test_data, sparsity_level=50):
+        print("[INFO] Model pruning started")
+        sparsity_level = int(sparsity_level)/100
+        epochs_pruning = 3
+        pruned_model_name = "gesture_model_f32_pruned"
+        self.print_model_weights_sparsity(model)
+        # define pruning schedule
+        prune_low_magnitude = tfmot.sparsity.keras.prune_low_magnitude
+        
+        # this wraps the the mode/layer with pruning functionality to ensure sparisty introduction during model retraining.
+        pruning_params = {
+            "pruning_schedule" : tfmot.sparsity.keras.ConstantSparsity(sparsity_level, begin_step=0, frequency=100)
+        }
+
+        model_for_pruning = prune_low_magnitude(model, **pruning_params)
+
+        callbacks = [
+            tfmot.sparsity.keras.UpdatePruningStep()
+        ]
+
+        optimizer = tf.keras.optimizers.Adam(1e-5)
+        
+        model_for_pruning.compile(
+            optimizer=optimizer,
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"]
+        )
+
+        model_for_pruning.summary()
+
+        model_for_pruning.fit(
+            train_data,
+            epochs = epochs_pruning,
+            steps_per_epoch=1000,
+            callbacks=callbacks,
+            verbose=1
+        )
+        print("[INFO] Model pruning done")
+
+        # after training we need to strip the pruning wrapper to avoid duplicated weights, leading to increase in model size.
+        stripped_pruned_model = tfmot.sparsity.keras.strip_pruning(model_for_pruning)
+        stripped_pruned_model.compile(
+            optimizer=optimizer,
+            loss="sparse_categorical_crossentropy",
+            metrics=["accuracy"]
+        )
+        # sparisty level in model after pruning
+        self.print_model_weights_sparsity(stripped_pruned_model)
+        loss , acc = stripped_pruned_model.evaluate(test_data)
+        print(f"Accuracy: {acc}\nLoss: {loss}")
+        stripped_pruned_model.save(f"{self.logdir}/Magic_wand_model_pruned.h5")
+
+    def print_model_weights_sparsity(self, model):
+        for layer in model.layers:
+            if isinstance(layer, tf.keras.layers.Wrapper):
+                weights = layer.trainable_weights
+            else:
+                weights = layer.weights
+            for weight in weights:
+                if "kernel" not in weight.name or "centroid" in weight.name:
+                    continue
+                weight_size = weight.numpy().size
+                zero_num = np.count_nonzero(weight == 0)
+                print(
+                    f"[INFO] {weight.name}: {zero_num/weight_size:.2%} sparsity ",
+                    f"({zero_num}/{weight_size})",
+                )
 
 
 if __name__ == "__main__":
@@ -250,6 +320,11 @@ if __name__ == "__main__":
     Driver function to train a machine learning model to classify square data
     @param args: Arguments taken from the user to determine how training works
     """
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-prune", "--sparsity_level", help = "Set the level of sparsity for pruning the model. Eg. 70 denotes '70%' sparse model.")
+    args = parser.parse_args()
+
+    
     train_obj = TrainModel()
 
     train_len, train_data, valid_len, valid_data, test_len, test_data = \

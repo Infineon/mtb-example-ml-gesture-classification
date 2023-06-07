@@ -32,7 +32,7 @@
 # Import sys module
 import sys
 import os
-import click
+#import click
 import serial
 import threading
 import queue

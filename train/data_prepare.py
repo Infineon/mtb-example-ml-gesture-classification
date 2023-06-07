@@ -46,7 +46,7 @@
 
 # CYPRESS CHANGES TO TENSORFLOW CONTENT:
 # Created a class around data prepare
-# Added overlap and data segmentation for augmentation
+# Added overlap and data segmentation
 # Add arguments for script options
 
 
@@ -80,7 +80,7 @@ class DataPreparation(NumpyArrayEncoder):
         self.label_name = 'gesture'
         self.data_name = 'accel_xyz'
 
-    def prepare_original_data_overlap(self, classes, name, data, file_to_read, overlap, augmentation):
+    def prepare_original_data_overlap(self, classes, name, data, file_to_read, overlap):
         """
         Read collected data from files.
 
@@ -89,7 +89,6 @@ class DataPreparation(NumpyArrayEncoder):
         @param data: The complete dataset
         @param file_to_read: The specific file that we want to read from a directory
         @param overlap: The overlap rate of data 0 - 0.99
-        @param augmentation: Stores whether or not data augmentation is selected
         """
 
         datax = []
@@ -118,7 +117,7 @@ class DataPreparation(NumpyArrayEncoder):
             datax.append(data_new)
             data_updating = datax
 
-            full_arr = self.overlap_features(data_updating, overlap, augmentation)
+            full_arr = self.overlap_features(data_updating, overlap)
 
             for idx1, line in enumerate(full_arr):
 
@@ -156,13 +155,12 @@ class DataPreparation(NumpyArrayEncoder):
 
         return signal_seg
 
-    def overlap_features(self, data_updating, overlap, augmentation):
+    def overlap_features(self, data_updating, overlap):
         """
         Overlap features at a rate of 0 to 0.9
 
         @param data_updating: Data to stretch based on overlap rate
         @param overlap: The rate as a decimal point that we want to overlap 0 to 0.99
-        @param augmentation: Stores whether or not data augmentation is selected
         @return: A list of segmented overlapped signals
         """
 
@@ -181,18 +179,7 @@ class DataPreparation(NumpyArrayEncoder):
 
         segmented_signal = self.segment_signal(df, overlap)
 
-        if augmentation == 'True':
-            my_augmenter = (TimeWarp() * 5  # random time warping 5 times in parallel
-                            + Crop(size=128)  # random crop subsequences with length 300
-                            + Quantize(n_levels=[10, 20, 30])  # random quantize to 10-, 20-, or 30- level sets
-                            + Drift(max_drift=(0.1, 0.5)) @ 0.8  # with 80% probability, random drift the signal up to 10% - 50%
-                            + Reverse() @ 0.5  # with 50% probability, reverse the sequence)
-                            )
-
-            augmented_signal = my_augmenter.augment(segmented_signal)
-            return augmented_signal
-        else:
-            return segmented_signal
+        return segmented_signal
 
     def write_data(self, data_to_write, path):
         """
@@ -259,19 +246,13 @@ class DataPreparation(NumpyArrayEncoder):
             for idx2, name in enumerate(names[idx1]):
                 activity = folder.split('/')
                 self.prepare_original_data_overlap(classes[idx1], name, final_data,
-                                                   "%s/%s" % (folder, name), args.overlap,
-                                                   args.augmentation)
+                                                   "%s/%s" % (folder, name), args.overlap)
 
         print('[INFO] All files read successfully')
         print("[INFO] Length of data set is: " + str(len(final_data)))
         print("[INFO] Writing dataset to data directory")
         self.write_complete_data(final_data)
         print("[INFO] Writing data complete")
-
-        # If user selected save as pickle
-        if args.savepkl == 'True':
-            data_name = 'square_dataset'
-            self.save_pickle(final_data, data_name)
 
         # Split data into train, validation, and test
         self.split_data(classes)
@@ -322,9 +303,7 @@ def main(arguments):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--savepkl", "-sp", default=False, help='Save the dataset as a pickle file')
     parser.add_argument("--overlap", "-o", default=0.2, type=float, help='Overlap of data rate as a decimal')
-    parser.add_argument("--augmentation", "-a", default=False, help='True if you want to Augment data, false if not')
     args = parser.parse_args()
 
     main(args)

@@ -1,5 +1,5 @@
 // This file is generated. Do not edit.
-// Generated on: 27.09.2022 21:35:09
+// Generated on: 18.01.2023 00:44:00
 
 #include "tensorflow/lite/c/builtin_op_data.h"
 #include "tensorflow/lite/c/common.h"
@@ -82,27 +82,27 @@ constexpr size_t kOpNodesCount = 10;
 TfLiteNode tflNodes[kOpNodesCount];
 
 const TfArray<4, int> tensor_dimension0 = { 4, { 1, 128, 6, 1, } };
-const ALIGN(8) float tensor_data1[16] = { 
+const ALIGN(8) float tensor_data1[4] = { 
+    -0.33739504218101501, 0.17368628084659576, -0.02987496554851532, 0.13987027108669281, 
+};
+const TfArray<1, int> tensor_dimension1 = { 1, { 4, } };
+const ALIGN(8) float tensor_data2[16] = { 
     0.10886132717132568, -0.026288855820894241, 0.080655165016651154, 0.11088180541992188, 0.11406004428863525, 0.011437696404755116, -0.026461983099579811, 0.064348280429840088, 0.060341015458106995, 0.10062052309513092, 
     -0.052499189972877502, 0.013211173936724663, -0.0080988332629203796, 0.073448345065116882, -0.0073391678743064404, -0.11390410363674164, 
 };
-const TfArray<1, int> tensor_dimension1 = { 1, { 16, } };
-const ALIGN(8) float tensor_data2[4] = { 
-    -0.33739504218101501, 0.17368628084659576, -0.02987496554851532, 0.13987027108669281, 
-};
-const TfArray<1, int> tensor_dimension2 = { 1, { 4, } };
-const ALIGN(8) float tensor_data3[16] = { 
-    0.0045708944089710712, -0.05622539296746254, 0.016376515850424767, 0.082962393760681152, 0.0080369347706437111, 0.032910976558923721, 0.01216418668627739, 0.054559521377086639, 0.1120610237121582, 0.00043348423787392676, 
-    0.019113359972834587, 0.0056272759102284908, -9.6064984973054379e-05, 0.091367632150650024, 0.10998598486185074, 0.018933691084384918, 
-};
-const TfArray<1, int> tensor_dimension3 = { 1, { 16, } };
-const ALIGN(8) float tensor_data4[32] = { 
+const TfArray<1, int> tensor_dimension2 = { 1, { 16, } };
+const ALIGN(8) float tensor_data3[32] = { 
     -0.030543280765414238, 0.088976159691810608, 0.056019991636276245, -0.063361369073390961, 0.0052999318577349186, -0.07973172515630722, 0.041921898722648621, -0.0019064421067014337, -0.024858895689249039, -0.062417607754468918, 
     -0.022304175421595573, -0.10273925960063934, 0.0058973301202058792, 0.045629806816577911, -0.050969090312719345, 0.058602098375558853, -0.063632011413574219, -0.12873187661170959, 0.017283421009778976, 0.07150036096572876, 
     0.056677307933568954, -0.035360980778932571, -0.041685249656438828, -0.10056460648775101, 0.039404083043336868, -0.068161226809024811, 0.042698502540588379, 0.013339861296117306, -0.015232282690703869, 0.017296358942985535, 
     -0.098143100738525391, -0.083299718797206879, 
 };
-const TfArray<1, int> tensor_dimension4 = { 1, { 32, } };
+const TfArray<1, int> tensor_dimension3 = { 1, { 32, } };
+const ALIGN(8) float tensor_data4[16] = { 
+    0.0045708944089710712, -0.05622539296746254, 0.016376515850424767, 0.082962393760681152, 0.0080369347706437111, 0.032910976558923721, 0.01216418668627739, 0.054559521377086639, 0.1120610237121582, 0.00043348423787392676, 
+    0.019113359972834587, 0.0056272759102284908, -9.6064984973054379e-05, 0.091367632150650024, 0.10998598486185074, 0.018933691084384918, 
+};
+const TfArray<1, int> tensor_dimension4 = { 1, { 16, } };
 const ALIGN(8) int32_t tensor_data5[2] = { 
     1, 2, 
 };
@@ -304,7 +304,7 @@ const TfArray<2, int> tensor_dimension19 = { 2, { 1, 16, } };
 const TfArray<2, int> tensor_dimension20 = { 2, { 1, 4, } };
 const TfArray<2, int> tensor_dimension21 = { 2, { 1, 4, } };
 const TfLiteConvParams opdata0 = { kTfLitePaddingSame, 1,1, kTfLiteActRelu, 1,1 };
-const TfArray<3, int> inputs0 = { 3, { 0, 10, 3, } };
+const TfArray<3, int> inputs0 = { 3, { 0, 10, 4, } };
 const TfArray<1, int> outputs0 = { 1, { 12, } };
 const TfLitePoolParams opdata1 = { kTfLitePaddingValid, 3,3, 3,3, kTfLiteActNone, { { 0,0, 0, 0 } } };
 const TfArray<1, int> inputs1 = { 1, { 12, } };
@@ -316,7 +316,7 @@ const TfLiteAddParams opdata3 = { kTfLiteActNone, 1 };
 const TfArray<2, int> inputs3 = { 2, { 14, 7, } };
 const TfArray<1, int> outputs3 = { 1, { 15, } };
 const TfLiteConvParams opdata4 = { kTfLitePaddingSame, 1,1, kTfLiteActRelu, 1,1 };
-const TfArray<3, int> inputs4 = { 3, { 15, 11, 4, } };
+const TfArray<3, int> inputs4 = { 3, { 15, 11, 3, } };
 const TfArray<1, int> outputs4 = { 1, { 16, } };
 const TfLitePoolParams opdata5 = { kTfLitePaddingValid, 1,3, 1,3, kTfLiteActNone, { { 0,0, 0, 0 } } };
 const TfArray<1, int> inputs5 = { 1, { 16, } };
@@ -325,20 +325,20 @@ const ALIGN(1) uint8_t opdata6[1] = { 0,  }; /* op type 40=MEAN */
 const TfArray<2, int> inputs6 = { 2, { 17, 5, } };
 const TfArray<1, int> outputs6 = { 1, { 18, } };
 const TfLiteFullyConnectedParams opdata7 = { kTfLiteActRelu, kTfLiteFullyConnectedWeightsFormatDefault, 0, 0 };
-const TfArray<3, int> inputs7 = { 3, { 18, 8, 1, } };
+const TfArray<3, int> inputs7 = { 3, { 18, 8, 2, } };
 const TfArray<1, int> outputs7 = { 1, { 19, } };
 const TfLiteFullyConnectedParams opdata8 = { kTfLiteActNone, kTfLiteFullyConnectedWeightsFormatDefault, 0, 0 };
-const TfArray<3, int> inputs8 = { 3, { 19, 9, 2, } };
+const TfArray<3, int> inputs8 = { 3, { 19, 9, 1, } };
 const TfArray<1, int> outputs8 = { 1, { 20, } };
 const TfLiteSoftmaxParams opdata9 = { 1 };
 const TfArray<1, int> inputs9 = { 1, { 20, } };
 const TfArray<1, int> outputs9 = { 1, { 21, } };
 const TensorInfo_t tensorData[] = {
   { kTfLiteFloat32, tensor_arena + 49152, (TfLiteIntArray*)&tensor_dimension0, 3072, },
-  { kTfLiteFloat32, (void*)tensor_data1, (TfLiteIntArray*)&tensor_dimension1, 64, },
-  { kTfLiteFloat32, (void*)tensor_data2, (TfLiteIntArray*)&tensor_dimension2, 16, },
-  { kTfLiteFloat32, (void*)tensor_data3, (TfLiteIntArray*)&tensor_dimension3, 64, },
-  { kTfLiteFloat32, (void*)tensor_data4, (TfLiteIntArray*)&tensor_dimension4, 128, },
+  { kTfLiteFloat32, (void*)tensor_data1, (TfLiteIntArray*)&tensor_dimension1, 16, },
+  { kTfLiteFloat32, (void*)tensor_data2, (TfLiteIntArray*)&tensor_dimension2, 64, },
+  { kTfLiteFloat32, (void*)tensor_data3, (TfLiteIntArray*)&tensor_dimension3, 128, },
+  { kTfLiteFloat32, (void*)tensor_data4, (TfLiteIntArray*)&tensor_dimension4, 64, },
   { kTfLiteInt32, (void*)tensor_data5, (TfLiteIntArray*)&tensor_dimension5, 8, },
   { kTfLiteFloat32, (void*)tensor_data6, (TfLiteIntArray*)&tensor_dimension6, 64, },
   { kTfLiteFloat32, (void*)tensor_data7, (TfLiteIntArray*)&tensor_dimension7, 64, },

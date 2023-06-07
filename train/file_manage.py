@@ -46,16 +46,19 @@ save = os.path.abspath(os.path.join(os.getcwd(), os.pardir))
 
 # Create a path to the most recent generated model
 latest = save + '\\train\\' + max(all_folders, key=os.path.getctime) + '\\Magic_wand_model.h5'
+latest_pruned = save + '\\train\\' + max(all_folders, key=os.path.getctime) + '\\Magic_wand_model_pruned.h5'
 
 # Create a path to the save location for tflite and h5 formats
 save_tflite = save + '\\pretrained_models\\' + 'User_generated_model.tflite'
-save = save + '\\pretrained_models\\' + 'User_generated_model.h5'
+save_keras = save + '\\pretrained_models\\' + 'User_generated_model.h5'
+save_pruned = save + '\\pretrained_models\\' + 'User_generated_model_pruned.h5'
 
 # Copy the model from logs to pretrained_models folder
-shutil.copyfile(latest, save)
+shutil.copyfile(latest, save_keras)
+shutil.copyfile(latest_pruned, save_pruned)
 
 # Generate a tflite model based on keras model
-model = tf.keras.models.load_model(save)
+model = tf.keras.models.load_model(save_keras)
 converter = tf.lite.TFLiteConverter.from_keras_model(model)
 tflite_model = converter.convert()
 open(save_tflite, "wb").write(tflite_model)

@@ -1,5 +1,5 @@
 /*
- * FreeRTOS Kernel V10.3.1
+ * FreeRTOS Kernel V10.4.3 LTS Patch 2
  * Copyright (C) 2020 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  * Copyright (C) 2019-2021 Cypress Semiconductor Corporation, or a subsidiary of
  * Cypress Semiconductor Corporation.  All Rights Reserved.
@@ -23,8 +23,8 @@
  * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  *
- * http://www.FreeRTOS.org
- * http://aws.amazon.com/freertos
+ * https://www.FreeRTOS.org
+ * https://github.com/FreeRTOS
  * http://www.cypress.com
  *
  */
@@ -45,7 +45,6 @@
  *----------------------------------------------------------*/
 
 #include "cy_utils.h"
-#include "cy_syslib.h"
 
 /* Get the low power configuration parameters from
  * the ModusToolbox Device Configurator GeneratedSource:
@@ -56,6 +55,7 @@
 
 #define configUSE_PREEMPTION                    1
 #define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+extern uint32_t SystemCoreClock;
 #define configCPU_CLOCK_HZ                      SystemCoreClock
 #define configTICK_RATE_HZ                      1000u
 #define configMAX_PRIORITIES                    7
@@ -199,10 +199,10 @@ standard names - or at least those used in the unmodified vector table. */
 
 /* Enable low power tickless functionality. The RTOS abstraction library
  * provides the compatible implementation of the vApplicationSleep hook:
- * https://github.com/cypresssemiconductorco/abstraction-rtos#freertos
+ * https://github.com/Infineon/abstraction-rtos#freertos
  * The Low Power Assistant library provides additional portable configuration layer
  * for low-power features supported by the PSoC 6 devices:
- * https://github.com/cypresssemiconductorco/lpa
+ * https://github.com/Infineon/lpa
  */
 extern void vApplicationSleep( uint32_t xExpectedIdleTime );
 #define portSUPPRESS_TICKS_AND_SLEEP( xIdleTime ) vApplicationSleep( xIdleTime )
@@ -223,7 +223,7 @@ extern void vApplicationSleep( uint32_t xExpectedIdleTime );
  * GCC toolchain: the application must provide the implementation for the required
  * newlib hook functions: __malloc_lock, __malloc_unlock, __env_lock, __env_unlock.
  * FreeRTOS-compatible implementation is provided by the clib-support library:
- * https://github.com/cypresssemiconductorco/clib-support
+ * https://github.com/Infineon/clib-support
  *
  * ARM/IAR toolchains: the application must provide the reent.h header to adapt
  * FreeRTOS's configUSE_NEWLIB_REENTRANT to work with the toolchain-specific C library.

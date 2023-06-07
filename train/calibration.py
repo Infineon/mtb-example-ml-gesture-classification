@@ -65,7 +65,6 @@ if __name__ == "__main__":
     # Store data from the selected folders in a numpy array
     total_data = []
     for x in range(len(calibration_data_path)):
-        print(calibration_data_path[x])
         data = genfromtxt(calibration_data_path[x], delimiter=',')
 
         # Removes all NAN variables in the numpy

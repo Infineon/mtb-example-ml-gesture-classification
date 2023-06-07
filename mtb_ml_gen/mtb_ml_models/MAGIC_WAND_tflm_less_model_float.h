@@ -1,5 +1,5 @@
 // This file is generated. Do not edit.
-// Generated on: 27.09.2022 21:35:09
+// Generated on: 18.01.2023 00:44:01
 
 #ifndef MAGIC_WAND_GEN_H
 #define MAGIC_WAND_GEN_H

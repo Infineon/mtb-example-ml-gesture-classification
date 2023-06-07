@@ -9,7 +9,7 @@
 *
 *
 *******************************************************************************
-* Copyright 2021-2022, Cypress Semiconductor Corporation (an Infineon company) or
+* Copyright 2021-2023, Cypress Semiconductor Corporation (an Infineon company) or
 * an affiliate of Cypress Semiconductor Corporation.  All rights reserved.
 *
 * This software, including source code, documentation and related
@@ -197,9 +197,9 @@ void gesture_task(void *arg)
 #else
 
 #if !COMPONENT_ML_FLOAT32
-        /* Convert to int16 based on the q format */
+        /* Quantize data before feeding model */
         MTB_ML_DATA_T data_feed_int[SENSOR_BATCH_SIZE][SENSOR_NUM_AXIS];
-        mtb_ml_utils_convert_flt_to_int(&data_feed[0][0], &data_feed_int[0][0], SENSOR_BATCH_SIZE*SENSOR_NUM_AXIS, QFORMAT_VALUE);
+        mtb_ml_utils_model_quantize(magic_wand_obj, &data_feed[0][0], &data_feed_int[0][0]);
 
         /* Feed the Model */
         input_reference = (MTB_ML_DATA_T *) data_feed_int;

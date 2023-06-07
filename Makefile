@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2018-2022, Cypress Semiconductor Corporation (an Infineon company)
+# Copyright 2018-2023, Cypress Semiconductor Corporation (an Infineon company)
 # SPDX-License-Identifier: Apache-2.0
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -185,6 +185,13 @@ endif
 ifeq (CY_028_SENSE_SHIELD_v2, $(SHIELD_DATA_COLLECTION))
 DEFINES+=CY_BMI_160_IMU_SPI=1
 DEFINES+=CY_IMU_SPI=1
+endif
+
+# Check if IAR is used with TFLM. If yes, trigger an error
+ifeq ($(NN_INFERENCE_ENGINE), $(filter $(NN_INFERENCE_ENGINE),tflm tflm_less))
+   ifeq ($(TOOLCHAIN), IAR)
+      $(error Only GCC_ARM and ARM toolchains are supported for TFLM inference engine)
+   endif
 endif
 
 # Select softfp or hardfp floating point. Default is softfp.
