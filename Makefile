@@ -7,7 +7,7 @@
 #
 ################################################################################
 # \copyright
-# Copyright 2018-2023, Cypress Semiconductor Corporation (an Infineon company)
+# Copyright 2018-2024, Cypress Semiconductor Corporation (an Infineon company)
 # SPDX-License-Identifier: Apache-2.0
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,20 +28,18 @@
 # Basic Configuration
 ################################################################################
 
-#Type of ModusToolbox Makefile Options include:
+# Type of ModusToolbox Makefile Options include:
 #
-#COMBINED    -- Top Level Makefile usually for single standalone application
-#APPLICATION -- Top Level Makefile usually for multi project application
-#PROJECT     -- Project Makefile under Application
+# COMBINED    -- Top Level Makefile usually for single standalone application
+# APPLICATION -- Top Level Makefile usually for multi project application
+# PROJECT     -- Project Makefile under Application
 #
 MTB_TYPE=COMBINED
 
 # Target board/hardware (BSP).
 # To change the target, it is recommended to use the Library manager
-# ('make modlibs' from command line), which will also update Eclipse IDE launch
-# configurations. If TARGET is manually edited, ensure TARGET_<BSP>.mtb with a
-# valid URL exists in the application, run 'make getlibs' to fetch BSP contents
-# and update or regenerate launch configurations for your IDE.
+# ('make library-manager' from command line), which will also update Eclipse IDE launch
+# configurations.
 TARGET=CY8CKIT-062S2-43012
 
 # Name of application (used to derive name of final linked file).
@@ -52,7 +50,7 @@ APPNAME=mtb-example-ml-gesture-classification
 
 # Name of toolchain to use. Options include:
 #
-# GCC_ARM -- GCC provided with ModusToolbox IDE
+# GCC_ARM -- GCC provided with ModusToolbox software
 # ARM     -- ARM Compiler (must be installed separately)
 # IAR     -- IAR Compiler (must be installed separately)
 #
@@ -96,7 +94,7 @@ NN_INFERENCE_ENGINE=tflm
 #
 # CY_028_TFT_SHIELD    -- Using the 028-TFT shield
 # CY_028_SENSE_SHIELD_v1  -- Using the 028-SENSE shield rev**
-# CY_028_SENSE_SHIELD_v2  -- Using the 028-SENSE shield rev*A or later
+# CY_028_SENSE_SHIELD_v2  -- Using the 028-SENSE shield rev*B or later
 SHIELD_DATA_COLLECTION=CY_028_TFT_SHIELD
 
 ################################################################################
@@ -194,6 +192,10 @@ ifeq ($(NN_INFERENCE_ENGINE), $(filter $(NN_INFERENCE_ENGINE),tflm tflm_less))
    endif
 endif
 
+ifeq (CY_028_SENSE_SHIELD_v1, $(SHIELD_DATA_COLLECTION))
+DEFINES+=BMI160_CHIP_ID=UINT8_C\(0xD8\)
+endif
+
 # Select softfp or hardfp floating point. Default is softfp.
 VFP_SELECT=hardfp
 
@@ -225,15 +227,8 @@ LDLIBS=
 LINKER_SCRIPT=
 
 # Custom post-build commands to run.
-PREBUILD=
-PREBUILD+=rm -rf bmi160;
-PREBUILD+=mkdir bmi160/;
-PREBUILD+=cp $(SEARCH_BMI160_driver)/bmi160* bmi160/;
-PREBUILD+=cp $(SEARCH_BMI160_driver)/LICENSE bmi160/;
-ifeq (CY_028_SENSE_SHIELD_v1, $(SHIELD_DATA_COLLECTION))
-PREBUILD+=sed -i 's/UINT8_C(0xD1)/UINT8_C(0xD8)/' bmi160/bmi160_defs.h;
-endif
-CY_IGNORE+=$(SEARCH_BMI160_driver)
+PREBUILD=$(SEARCH_sensor-orientation-bmx160)/bmx160_fix.bash "libs/BMI160_driver/bmi160_defs.h"
+
 
 ################################################################################
 # Paths
@@ -257,14 +252,16 @@ CY_GETLIBS_SHARED_PATH=../
 #
 CY_GETLIBS_SHARED_NAME=mtb_shared
 
-# Absolute path to the compiler's "bin" directory.
+# Absolute path to the compiler's "bin" directory. The variable name depends on the
+# toolchain used for the build. Refer to the ModusToolbox user guide to get the correct
+# variable name for the toolchain used in your build.
 #
 # The default depends on the selected TOOLCHAIN (GCC_ARM uses the ModusToolbox
-# IDE provided compiler by default).
-CY_COMPILER_PATH=
+# software provided compiler by default).
+CY_COMPILER_GCC_ARM_DIR=
 
 
-# Locate ModusToolbox IDE helper tools folders in default installation
+# Locate ModusToolbox helper tools folders in default installation
 # locations for Windows, Linux, and macOS.
 CY_WIN_HOME=$(subst \,/,$(USERPROFILE))
 CY_TOOLS_PATHS ?= $(wildcard \
@@ -272,7 +269,7 @@ CY_TOOLS_PATHS ?= $(wildcard \
     $(HOME)/ModusToolbox/tools_* \
     /Applications/ModusToolbox/tools_*)
 
-# If you install ModusToolbox IDE in a custom location, add the path to its
+# If you install ModusToolbox software in a custom location, add the path to its
 # "tools_X.Y" folder (where X and Y are the version number of the tools
 # folder). Make sure you use forward slashes.
 CY_TOOLS_PATHS+=
