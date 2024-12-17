@@ -6,7 +6,7 @@ For more details, see the [ModusToolbox&trade; Machine Learning solution](https:
 
 [View this README on GitHub.](https://github.com/Infineon/mtb-example-ml-gesture-classification)
 
-[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzMxMTIiLCJTcGVjIE51bWJlciI6IjAwMi0zMzExMiIsIkRvYyBUaXRsZSI6Ik1hY2hpbmUgTGVhcm5pbmc6IEdlc3R1cmUgY2xhc3NpZmljYXRpb24iLCJyaWQiOiJucnNoIiwiRG9jIHZlcnNpb24iOiIzLjIuMCIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
+[Provide feedback on this code example.](https://cypress.co1.qualtrics.com/jfe/form/SV_1NTns53sK2yiljn?Q_EED=eyJVbmlxdWUgRG9jIElkIjoiQ0UyMzMxMTIiLCJTcGVjIE51bWJlciI6IjAwMi0zMzExMiIsIkRvYyBUaXRsZSI6Ik1hY2hpbmUgTGVhcm5pbmc6IEdlc3R1cmUgY2xhc3NpZmljYXRpb24iLCJyaWQiOiJucnNoIiwiRG9jIHZlcnNpb24iOiIzLjIuMSIsIkRvYyBMYW5ndWFnZSI6IkVuZ2xpc2giLCJEb2MgRGl2aXNpb24iOiJNQ0QiLCJEb2MgQlUiOiJJQ1ciLCJEb2MgRmFtaWx5IjoiUFNPQyJ9)
 
 **Disclaimer:** The model provided is an example and may need customization for generalization or to meet certain performance criteria. If you require large-scale production, contact your sales representative.
 
@@ -25,7 +25,7 @@ For more details, see the [ModusToolbox&trade; Machine Learning solution](https:
 
 - GNU Arm&reg; Embedded Compiler v11.3.1 (`GCC_ARM`) – Default value of `TOOLCHAIN`
 - Arm&reg; Compiler v6.16 (`ARM`)
-- IAR C/C++ Compiler v9.30.1 (`IAR`)
+
 
 > **Note:** `tflm` is not supported with `IAR`
 
@@ -462,7 +462,7 @@ Document title: *CE233112* – *Machine Learning: Gesture classification*
  3.0.0   | Update to ModusToolbox&trade; 3.0 and Machine Learning 2.0
  3.1.0   | Update to support model pruning and sparsity <br> Update to use the new mtb_ml_utils_quantize() function.
  3.2.0   | Update to use BMX160 script for changing chip ID. Add protobuf to requirements.txt and Updated to support ModusToolbox&trade; 3.2.
-
+ 3.2.1   | Added variable in makefile to support for GCC_ARM and ARM compilers.
 <br>
 
 All referenced product or service names and trademarks are the property of their respective owners.

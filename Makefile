@@ -36,6 +36,8 @@
 #
 MTB_TYPE=COMBINED
 
+MTB_SUPPORTED_TOOLCHAINS=GCC_ARM ARM
+
 # Target board/hardware (BSP).
 # To change the target, it is recommended to use the Library manager
 # ('make library-manager' from command line), which will also update Eclipse IDE launch
